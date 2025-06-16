@@ -1,6 +1,13 @@
 #ifndef BOINX_STATE_H
 #define BOINX_STATE_H
 
+enum InputMode {
+    LiveInput,
+    SequencerInput,
+    EffectInput,
+    SettingsInput
+};
+
 enum EventType {
     NoteOn,
     NoteOff,
@@ -14,9 +21,10 @@ struct Event {
     int param;
 };
 
-struct GlobalSettings {
+struct BoinxState {
+    InputMode mode = LiveInput;
     unsigned int key; // Define chords
-    int transpose; // Transposition (white keys mode ?)
+    int transpose = 0; // Transposition (white keys mode ?)
 };
 
 #endif

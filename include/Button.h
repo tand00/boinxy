@@ -25,6 +25,7 @@ class Button {
 
         uint8_t _pin;
         ButtonState _state = Released;
+        
 };
 
 #endif

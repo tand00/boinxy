@@ -5,15 +5,20 @@
 #include "BoinxState.h"
 
 class AppPage {
+    
     public:
-        AppPage(GlobalSettings* settings)
+
+        AppPage(BoinxState* settings)
             : _settings(settings) {}
         
         virtual void enter() {};
         virtual void update() = 0;
         virtual void leave() {};
+
     private:
-        GlobalSettings* _settings = nullptr;
+
+        BoinxState* _settings = nullptr;
+
 };
 
 #endif
