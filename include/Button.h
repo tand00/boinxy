@@ -14,7 +14,6 @@ class Button {
 
     public:
 
-        Button();
         Button(uint8_t pin);
 
         void setup(bool pullup = true);

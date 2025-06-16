@@ -1,4 +1,4 @@
-#include "Sequencer.h"
+#include <Sequencer.h>
 
 unsigned int Sequencer::getTempo() const
 {
@@ -12,12 +12,12 @@ void Sequencer::setTempo(unsigned int tempo)
 
 void Sequencer::incrTempo()
 {
-    _tempo++;
+    setTempo(_tempo + 1);
 }
 
 void Sequencer::decrTempo()
 {
-    if(_tempo > 1) _tempo--;
+    setTempo(_tempo - 1);
 }
 
 unsigned int Sequencer::getTrackLen() const
@@ -32,7 +32,7 @@ unsigned int Sequencer::getCurrentStep() const
 
 void Sequencer::setTrackLen(unsigned int len)
 {
-    _track_len = max(1, len);
+    _track_len = min(max(1, len), MAX_SEQUENCER_STEPS);
 }
 
 void Sequencer::setCurrentStep(unsigned int step)
@@ -53,7 +53,7 @@ void Sequencer::update()
 
 void Sequencer::triggerStep()
 {
-
+    // TODO
 }
 
 void Sequencer::reset()
@@ -88,5 +88,6 @@ SeqDirection Sequencer::getDirection() const
 
 int Sequencer::usStepLen()
 {
-    return ;
+    double beat_duration = (60.0 / ((double) _tempo)) * 1.0E6;
+    return beat_duration;
 }
