@@ -8,8 +8,8 @@ class Instrument {
     public:
 
         virtual Event on_event(Event) = 0;
-        virtual char* get_name() const = 0; 
-        
+        virtual const char* get_name() const = 0; 
+
 };
 
 #endif
