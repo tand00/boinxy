@@ -7,7 +7,7 @@ class SamplePlayer {
 
     public:
 
-        SamplePlayer(AudioPlaySdWav* players[], const size_t n_players);
+        SamplePlayer(AudioPlaySdWav* players[], const uint8_t n_players);
 
         const char* getSampleName(int i);
         void playSample(int i);
@@ -15,7 +15,7 @@ class SamplePlayer {
     private:
 
         AudioPlaySdWav** _players;
-        size_t _n_players;
+        uint8_t _n_players;
 
 };
 

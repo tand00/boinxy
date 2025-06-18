@@ -4,8 +4,11 @@
 #include "AppPage.h"
 
 class LivePage : public AppPage {
+
     public:
+
         void update() override;
+        
 };
 
 #endif

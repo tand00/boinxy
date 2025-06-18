@@ -20,30 +20,43 @@ void Keyboard::setup() {
     }
 }
 
+void Keyboard::reset() {
+    for(int i = 0 ; i < N_NOTES ; i++) {
+        _notes_status[i] = false;
+    }
+}
+
 int8_t Keyboard::octave() const {
     return _octave;
 }
 
-void Keyboard::octave_up() {
-    _octave = min(_octave + 1, 8);
+void Keyboard::octaveUp() {
+    setOctave(min(_octave + 1, 8));
 }
 
-void Keyboard::octave_down() {
-    _octave = max(_octave - 1, -2);
+void Keyboard::octaveDown() {
+    setOctave(max(_octave - 1, -2));
 }
 
-void Keyboard::set_octave(int8_t o) {
+void Keyboard::setOctave(int8_t o) {
     _octave = min(max(o, (int8_t) -2), (int8_t) 8);
+    reset();
 }
 
 void Keyboard::update() {
-    for(int i = 0 ; i < KEYBOARD_SIZE ; i++) {
+    for(int i = 0 ; i < KEYBOARD_SIZE - 2 ; i++) {
         ButtonState state = _buttons[i]->update();
-        int8_t note = note_number(i);
+        int8_t note = noteNumber(i);
+    }
+    if(_buttons[KEYBOARD_SIZE - 2]->update() == JustPressed) {
+        octaveDown();
+    }
+    if(_buttons[KEYBOARD_SIZE - 1]->update() == JustPressed) {
+        octaveUp();
     }
 }
 
-int8_t Keyboard::note_number(int8_t button) {
+int8_t Keyboard::noteNumber(int8_t button) {
     int8_t note = 24 + (_octave * 12) + (button - _c_pos);
     return min(max(note, (int8_t) 0), (int8_t) 127);
 }

@@ -6,15 +6,17 @@
 #include <Adafruit_SH110X.h>
 #include <Encoder.h>
 #include <USBHost_t36.h>
+#include <LedControl.h>
 
 #include <Keyboard.h>
 #include <BoinxState.h>
 #include <Button.h>
 #include <AppPage.h>
 #include <Sequencer.h>
-#include <LedControl.h>
+#include <Solfagus.h>
 
 Sequencer sequencer;
+Solfagus solfagus;
 
 USBHost usb_host;
 MIDIDevice midi_in(usb_host);

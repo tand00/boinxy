@@ -12,8 +12,6 @@ enum EventType {
     NoteOn,
     NoteOff,
     PlaySample,
-    ChordOn,
-    ChordOff
 };
 
 struct Event {
@@ -23,7 +21,6 @@ struct Event {
 
 struct BoinxState {
     InputMode mode = LiveInput;
-    unsigned int key; // Define chords
     int transpose = 0; // Transposition (white keys mode ?)
 };
 
