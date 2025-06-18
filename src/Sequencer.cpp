@@ -42,11 +42,13 @@ void Sequencer::setCurrentStep(unsigned int step)
 
 void Sequencer::update()
 {
+    step_flag = false;
     if(_direction == Paused) return;
     int step_len = usStepLen();
     if(_elapsed >= step_len) {
         _current_step = (_current_step + _direction * 1) % _track_len;
         _elapsed = _elapsed % step_len;
+        step_flag = true;
         triggerStep();
     }
 }
@@ -60,6 +62,7 @@ void Sequencer::reset()
 {
     _current_step = 0;
     _elapsed = 0;
+    step_flag = true;
     triggerStep();
 }
 

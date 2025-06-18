@@ -37,6 +37,8 @@ class Sequencer {
 
         int usStepLen();
 
+        bool step_flag = false;
+
     private:
 
         unsigned int _tempo = 80;
