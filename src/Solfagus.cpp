@@ -1,18 +1,24 @@
 #include "Solfagus.h"
 
-PROGMEM const char MAJOR_STEPS[] = { 0, 2, 4, 5, 7, 9, 11 };
-PROGMEM const char MINOR_STEPS[] = { 0, 2, 3, 5, 7, 8, 10 };
-PROGMEM const char PENTA_MAJOR_STEPS[] = { 0, 2, 4, 7, 9 };
-PROGMEM const char PENTA_MINOR_STEPS[] = { 0, 3, 5, 7, 10 };
-PROGMEM const char BLUES_STEPS[] = { 0, 3, 5, 6, 7, 10 };
+PROGMEM const int8_t MAJOR_STEPS[] = { 0, 2, 4, 5, 7, 9, 11 };
+PROGMEM const int8_t MINOR_STEPS[] = { 0, 2, 3, 5, 7, 8, 10 };
+PROGMEM const int8_t PENTA_MAJOR_STEPS[] = { 0, 2, 4, 7, 9 };
+PROGMEM const int8_t PENTA_MINOR_STEPS[] = { 0, 3, 5, 7, 10 };
+PROGMEM const int8_t BLUES_STEPS[] = { 0, 3, 5, 6, 7, 10 };
 
-PROGMEM const char MAJOR_CHORD_STEPS[] = { 0, 4, 7, 11 };
-PROGMEM const char MINOR_CHORD_STEPS[] = { 0, 3, 7, 10 };
-PROGMEM const char DIMINISHED_CHORD_STEPS[] = { 0, 3, 6, 9 };
-PROGMEM const char DOM7_CHORD_STEPS[] = { 0, 4, 7, 10 };
+PROGMEM const int8_t MAJOR_CHORD_STEPS[] = { 0, 4, 7, 11 };
+PROGMEM const int8_t MINOR_CHORD_STEPS[] = { 0, 3, 7, 10 };
+PROGMEM const int8_t DIMINISHED_CHORD_STEPS[] = { 0, 3, 6, 9 };
+PROGMEM const int8_t DOM7_CHORD_STEPS[] = { 0, 4, 7, 10 };
 
-PROGMEM const char* MAJOR_SCALE_CHORDS[] = { MAJOR_CHORD_STEPS, MINOR_CHORD_STEPS, MINOR_CHORD_STEPS, MAJOR_CHORD_STEPS, MAJOR_CHORD_STEPS, MINOR_CHORD_STEPS, DIMINISHED_CHORD_STEPS };
-PROGMEM const char* MINOR_SCALE_CHORDS[] = { MINOR_CHORD_STEPS, DIMINISHED_CHORD_STEPS, MAJOR_CHORD_STEPS, MINOR_CHORD_STEPS, MINOR_CHORD_STEPS, MAJOR_CHORD_STEPS, MAJOR_CHORD_STEPS };
+PROGMEM const int8_t* MAJOR_SCALE_CHORDS[] = { 
+    MAJOR_CHORD_STEPS, MINOR_CHORD_STEPS, MINOR_CHORD_STEPS, 
+    MAJOR_CHORD_STEPS, MAJOR_CHORD_STEPS, MINOR_CHORD_STEPS, 
+    DIMINISHED_CHORD_STEPS };
+PROGMEM const int8_t* MINOR_SCALE_CHORDS[] = { 
+    MINOR_CHORD_STEPS, DIMINISHED_CHORD_STEPS, MAJOR_CHORD_STEPS, 
+    MINOR_CHORD_STEPS, MINOR_CHORD_STEPS, MAJOR_CHORD_STEPS, 
+    MAJOR_CHORD_STEPS };
 
 void Solfagus::setKey(const Key key)
 {
@@ -58,10 +64,61 @@ int8_t Solfagus::chordNote(const int8_t root_index, const int8_t index) const
         case Chromatic:
         case Major:
         case PentatonicMajor:
-            return MAJOR_SCALE_CHORDS[root_index][index];
+            return noteAt(root_index) + MAJOR_SCALE_CHORDS[root_index][index];
         case Minor:
         case PentatonicMinor:
         case Blues:
-            return MINOR_SCALE_CHORDS[root_index][index];
+            return noteAt(root_index) + MINOR_SCALE_CHORDS[root_index][index];
+    }
+}
+
+void Solfagus::chordAt(const int8_t root_index, int8_t notes[], uint8_t n) const
+{
+    for(int i = 0 ; i < n ; i++) {
+        notes[i] = chordNote(root_index, i);
+    }
+}
+
+void Solfagus::chord(int8_t notes[], uint8_t n) const
+{
+    const int8_t root = notes[0] % 12;
+    int8_t index = 0;
+    int8_t note = _key.tonic;
+    while(note != _key.tonic || index == 0) {
+        if(note % 12 == root) {
+            chordAt(index, notes, n);
+            return;
+        }
+        index++;
+        note = noteAt(index);
+    }
+    chordAt(0, notes, n);
+}
+
+void Solfagus::majorChord(int8_t notes[], uint8_t n) const
+{
+    for(int i = 1 ; i < n ; i++) {
+        notes[i] = notes[0] + MAJOR_CHORD_STEPS[i];
+    }
+}
+
+void Solfagus::minorChord(int8_t notes[], uint8_t n) const
+{
+    for(int i = 1 ; i < n ; i++) {
+        notes[i] = notes[0] + MINOR_CHORD_STEPS[i];
+    }
+}
+
+void Solfagus::dimChord(int8_t notes[], uint8_t n) const
+{
+    for(int i = 1 ; i < n ; i++) {
+        notes[i] = notes[0] + DIMINISHED_CHORD_STEPS[i];
+    }
+}
+
+void Solfagus::dom7Chord(int8_t notes[], uint8_t n) const
+{
+    for(int i = 1 ; i < n ; i++) {
+        notes[i] = notes[0] + DOM7_CHORD_STEPS[i];
     }
 }

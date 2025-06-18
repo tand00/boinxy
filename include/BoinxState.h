@@ -4,6 +4,7 @@
 enum InputMode {
     LiveInput,
     SequencerInput,
+    Harmonica,
     EffectInput,
     SettingsInput
 };
