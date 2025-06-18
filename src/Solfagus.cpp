@@ -64,11 +64,15 @@ int8_t Solfagus::chordNote(const int8_t root_index, const int8_t index) const
         case Chromatic:
         case Major:
         case PentatonicMajor:
-            return noteAt(root_index) + MAJOR_SCALE_CHORDS[root_index][index];
+            return _key.tonic
+                + MAJOR_STEPS[root_index % 7]
+                + MAJOR_SCALE_CHORDS[root_index % 7][index];
         case Minor:
         case PentatonicMinor:
         case Blues:
-            return noteAt(root_index) + MINOR_SCALE_CHORDS[root_index][index];
+            return _key.tonic 
+                + MINOR_STEPS[root_index % 7]
+                + MINOR_SCALE_CHORDS[root_index % 7][index];
     }
 }
 
