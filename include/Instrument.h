@@ -1,13 +1,13 @@
 #ifndef INSTRUMENT_H
 #define INSTRUMENT_H
 
-#include "BoinxState.h"
+#include "Event.h"
 
 class Instrument {
 
     public:
 
-        virtual Event on_event(Event) = 0;
+        virtual void on_event(Event) = 0;
         virtual const char* get_name() const = 0; 
 
 };

@@ -30,3 +30,14 @@ void SamplePlayer::playSample(int i)
     }
     _players[selected]->play(filename);
 }
+
+void SamplePlayer::on_event(Event ev)
+{
+    if(ev.type != Pulse) return;
+    playSample(ev.param);
+}
+
+const char *SamplePlayer::get_name() const
+{
+    return "Sampler";
+}

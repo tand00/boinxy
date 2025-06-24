@@ -2,8 +2,10 @@
 #define SEQUENCER_H
 
 #define MAX_SEQUENCER_STEPS 64
+#define MAX_EVENTS_PER_STEP 16
 
 #include <Arduino.h>
+#include <Event.h>
 
 enum SeqDirection {
     Paused = 0,
@@ -24,18 +26,22 @@ class Sequencer {
         void setTrackLen(unsigned int len);
 
         unsigned int getCurrentStep() const;
-        void setCurrentStep(unsigned int step);
+        void setCurrentStep(unsigned int step, bool reset_time = true);
         
         void update();
         void reset();
         void triggerStep();
+
+        void toggleRecord();
+        void setRecord(const bool record);
+        bool isRecording() const;
 
         void pause();
         void backward();
         void forward();
         SeqDirection getDirection() const;
 
-        int usStepLen();
+        unsigned long usStepLen();
 
         bool step_flag = false;
 
@@ -47,7 +53,11 @@ class Sequencer {
         elapsedMicros _elapsed = 0;
         int _date_backup = 0;
 
+        bool _record = false;
+
         SeqDirection _direction = Forward;
+
+        Event _events[MAX_SEQUENCER_STEPS][MAX_EVENTS_PER_STEP];
         
 };
 

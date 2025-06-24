@@ -10,24 +10,34 @@
 
 #include <Keyboard.h>
 #include <BoinxState.h>
+#include <BoinxAudio.h>
 #include <Button.h>
 #include <AppPage.h>
 #include <Sequencer.h>
 #include <Solfagus.h>
-
-Sequencer sequencer;
-Solfagus solfagus;
+#include <Instrument.h>
+#include <SamplePlayer.h>
 
 USBHost usb_host;
 MIDIDevice midi_in(usb_host);
 
 LedControl leds(MATRIX_DATA, MATRIX_CLK, MATRIX_CS, MATRIX_COUNT);
 Adafruit_MCP23X17 mcp;
-Adafruit_SH1107 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET, 1000000, 100000);
+Adafruit_SH1107 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
 Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 Encoder encoder4(ENCODER_4_A, ENCODER_4_B);
+
+AudioPlaySdWav* samplePlayers[] = { &sdSamplePlayer1, &sdSamplePlayer2, &sdSamplePlayer3, &sdSamplePlayer4 };
+
+Sequencer sequencer;
+Solfagus solfagus;
+Instrument* instruments[] = {
+    new SamplePlayer(samplePlayers, 4)
+};
+
+BoinxState state = { LiveInput, 0, instruments, &sequencer, &solfagus };
 
 void setup() {
     Serial.begin(BAUDRATE);
@@ -36,13 +46,16 @@ void setup() {
     if(!mcp.begin_I2C()) {
         Serial.println("Unable to initialize MCP !");
     }
+    Serial.println("Initialized MCP !");
     if(!display.begin(SCREEN_ADDR)) {
         Serial.println("Unable to initialize display !");
     }
+    Serial.println("Initialized Display !");
     for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
         leds.clearDisplay(i);
     }
-    Serial.println("Initialized !");
+    Serial.println("Initialized Leds Matrix !");
+    Serial.println("Boinx is ready to rock !");
 }
 
 void loop() {

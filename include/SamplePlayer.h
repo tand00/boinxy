@@ -2,8 +2,9 @@
 #define BNX_SAMPLE_PLAYER_H
 
 #include <Audio.h>
+#include <Instrument.h>
 
-class SamplePlayer {
+class SamplePlayer : public Instrument {
 
     public:
 
@@ -11,6 +12,9 @@ class SamplePlayer {
 
         const char* getSampleName(int i);
         void playSample(int i);
+
+        void on_event(Event ev) override;
+        const char* get_name() const override; 
 
     private:
 

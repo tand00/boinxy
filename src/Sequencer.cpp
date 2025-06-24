@@ -35,19 +35,20 @@ void Sequencer::setTrackLen(unsigned int len)
     _track_len = min(max(1, len), MAX_SEQUENCER_STEPS);
 }
 
-void Sequencer::setCurrentStep(unsigned int step)
+void Sequencer::setCurrentStep(unsigned int step, bool reset_time)
 {
     _current_step = step;
+    if(reset_time) _elapsed = 0;
 }
 
 void Sequencer::update()
 {
     step_flag = false;
     if(_direction == Paused) return;
-    int step_len = usStepLen();
+    unsigned long step_len = usStepLen();
     if(_elapsed >= step_len) {
         _current_step = (_current_step + _direction * 1) % _track_len;
-        _elapsed = _elapsed % step_len;
+        _elapsed -= step_len;
         step_flag = true;
         triggerStep();
     }
@@ -56,6 +57,21 @@ void Sequencer::update()
 void Sequencer::triggerStep()
 {
     // TODO
+}
+
+void Sequencer::toggleRecord()
+{
+    _record = !_record;
+}
+
+void Sequencer::setRecord(const bool record)
+{
+    _record = record;
+}
+
+bool Sequencer::isRecording() const
+{
+    return _record;
 }
 
 void Sequencer::reset()
@@ -89,7 +105,7 @@ SeqDirection Sequencer::getDirection() const
     return _direction;
 }
 
-int Sequencer::usStepLen()
+unsigned long Sequencer::usStepLen()
 {
     double beat_duration = (60.0 / ((double) _tempo)) * 1.0E6;
     return beat_duration;
