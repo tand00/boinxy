@@ -4,9 +4,9 @@
 #include <Arduino.h>
 
 enum EventType {
+    Pulse,
     NoteOn,
     NoteOff,
-    Pulse,
 };
 
 struct Event {

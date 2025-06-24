@@ -6,14 +6,9 @@ SamplePlayer::SamplePlayer(AudioPlaySdWav *players[], const uint8_t n_players)
 
 }
 
-const char *SamplePlayer::getSampleName(int i)
-{
-    return "samples/0.wav";
-}
-
 void SamplePlayer::playSample(int i)
 {
-    const char* filename = getSampleName(i);
+    const char* filename = getParamName(i);
     uint8_t selected = 0;
     uint32_t max_pos = 0;
     for(uint8_t i = 0 ; i < _n_players ; i++) {
@@ -31,13 +26,18 @@ void SamplePlayer::playSample(int i)
     _players[selected]->play(filename);
 }
 
-void SamplePlayer::on_event(Event ev)
+void SamplePlayer::onEvent(Event ev)
 {
     if(ev.type != Pulse) return;
     playSample(ev.param);
 }
 
-const char *SamplePlayer::get_name() const
+const char *SamplePlayer::getName() const
 {
     return "Sampler";
+}
+
+const char *SamplePlayer::getParamName(int i) const
+{
+    return "samples/000.wav";
 }

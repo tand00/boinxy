@@ -4,22 +4,25 @@
 #include <Instrument.h>
 #include <Sequencer.h>
 #include <Solfagus.h>
+#include <Event.h>
 
 enum InputMode {
     LiveInput,
     SequencerInput,
-    Harmonica,
-    Theremin,
+    HarmonicaInput,
+    //ThereminInput,
     EffectInput,
     SettingsInput
 };
 
 struct BoinxState {
     InputMode mode = LiveInput;
-    int transpose = 0; // Transposition (white keys mode ?)
+    int transpose = 0; 
     Instrument** instruments;
     Sequencer* sequencer;
     Solfagus* solfagus;
+
+    void execute(Event e) const;
 };
 
 #endif

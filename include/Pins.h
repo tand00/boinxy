@@ -65,11 +65,10 @@
 #define KEYBOARD_KEY_10 1
 #define KEYBOARD_KEY_11 1
 #define KEYBOARD_KEY_12 1
+#define KEYBOARD_KEY_13 1
+#define KEYBOARD_KEY_14 1
 #define KEYBOARD_OCT_UP 1
 #define KEYBOARD_OCT_DOWN 1
-
-#define MCP_BUTTON_1 1
-#define MCP_BUTTON_2 1
 
 // -----------------------------------------------------------------------------
 

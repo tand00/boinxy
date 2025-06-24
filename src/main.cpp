@@ -17,6 +17,8 @@
 #include <Solfagus.h>
 #include <Instrument.h>
 #include <SamplePlayer.h>
+#include <LivePage.h>
+#include <SequencerPage.h>
 
 USBHost usb_host;
 MIDIDevice midi_in(usb_host);
@@ -39,7 +41,11 @@ Instrument* instruments[] = {
 
 BoinxState state = { LiveInput, 0, instruments, &sequencer, &solfagus };
 
-void setup() {
+LivePage livePage(&state);
+SequencerPage sequencerPage(&state);
+
+void setup() 
+{
     Serial.begin(BAUDRATE);
     Serial.println("[BOINX]");
     Serial.println("Initializing...");
@@ -58,6 +64,17 @@ void setup() {
     Serial.println("Boinx is ready to rock !");
 }
 
-void loop() {
+void loop() 
+{
     sequencer.update();
+    switch(state.mode) {
+        case LiveInput:
+            livePage.update();
+            break;
+        case SequencerInput:
+            sequencerPage.update();
+            break;
+        default:
+            break;
+    }
 }

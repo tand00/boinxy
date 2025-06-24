@@ -7,8 +7,9 @@ class Instrument {
 
     public:
 
-        virtual void on_event(Event) = 0;
-        virtual const char* get_name() const = 0; 
+        virtual void onEvent(Event) = 0;
+        virtual const char* getName() const = 0; 
+        virtual const char* getParamName(int i) const = 0;
 
 };
 

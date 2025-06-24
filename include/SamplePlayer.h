@@ -10,11 +10,11 @@ class SamplePlayer : public Instrument {
 
         SamplePlayer(AudioPlaySdWav* players[], const uint8_t n_players);
 
-        const char* getSampleName(int i);
         void playSample(int i);
 
-        void on_event(Event ev) override;
-        const char* get_name() const override; 
+        void onEvent(Event ev) override;
+        const char* getName() const override; 
+        const char* getParamName(int i) const override;
 
     private:
 

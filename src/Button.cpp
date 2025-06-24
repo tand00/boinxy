@@ -2,23 +2,28 @@
 
 #include <Arduino.h>
 
-Button::Button(uint8_t pin) : _pin(pin) {
+Button::Button(uint8_t pin) : _pin(pin) 
+{
     
 }
 
-void Button::setup(bool pullup) {
+void Button::setup(bool pullup) 
+{
     pinMode(_pin, pullup ? INPUT_PULLUP : INPUT);
 }
 
-ButtonState Button::state() const {
+ButtonState Button::state() const 
+{
     return _state;
 }
 
-bool Button::pressed() const {
+bool Button::pressed() const 
+{
     return (_state == Pressed) || (_state == JustPressed);
 }
 
-ButtonState Button::update() {
+ButtonState Button::update() 
+{
     bool status = (digitalRead(_pin) == LOW);
     if(status) {
         if(!pressed()) _state = JustPressed;

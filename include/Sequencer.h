@@ -44,6 +44,7 @@ class Sequencer {
         unsigned long usStepLen();
 
         bool step_flag = false;
+        bool sequence_flag = false;
 
     private:
 
@@ -58,6 +59,7 @@ class Sequencer {
         SeqDirection _direction = Forward;
 
         Event _events[MAX_SEQUENCER_STEPS][MAX_EVENTS_PER_STEP];
+        uint8_t _events_indexs[MAX_SEQUENCER_STEPS] = { 0 };
         
 };
 

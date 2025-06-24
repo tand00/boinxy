@@ -8,8 +8,8 @@ class AppPage {
     
     public:
 
-        AppPage(BoinxState* settings)
-            : _settings(settings) {}
+        AppPage(BoinxState* state)
+            : _state(state) {}
         
         virtual void enter() {};
         virtual void update() = 0;
@@ -17,7 +17,7 @@ class AppPage {
 
     private:
 
-        BoinxState* _settings = nullptr;
+        BoinxState* _state = nullptr;
 
 };
 
