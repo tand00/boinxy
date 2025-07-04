@@ -15,8 +15,11 @@
 #include <AppPage.h>
 #include <Sequencer.h>
 #include <Solfagus.h>
+
 #include <Instrument.h>
 #include <SamplePlayer.h>
+#include <NaiveSynth.h>
+
 #include <LivePage.h>
 #include <SequencerPage.h>
 
@@ -35,7 +38,8 @@ AudioPlaySdWav* samplePlayers[] = { &sdSamplePlayer1, &sdSamplePlayer2, &sdSampl
 
 Sequencer sequencer;
 Solfagus solfagus;
-Instrument* instruments[] = {
+Instrument* instruments[N_INSTRUMENTS] = {
+    new NaiveSynth(),
     new SamplePlayer(samplePlayers, 4)
 };
 
@@ -77,4 +81,5 @@ void loop()
         default:
             break;
     }
+    i2sOutput.update();
 }

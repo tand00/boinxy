@@ -6,6 +6,8 @@
 #include <Solfagus.h>
 #include <Event.h>
 
+#define N_INSTRUMENTS 2
+
 enum InputMode {
     LiveInput,
     SequencerInput,
@@ -17,7 +19,7 @@ enum InputMode {
 
 struct BoinxState {
     InputMode mode = LiveInput;
-    int transpose = 0; 
+    int transpose = 0;
     Instrument** instruments;
     Sequencer* sequencer;
     Solfagus* solfagus;
