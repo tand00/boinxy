@@ -15,7 +15,12 @@ const char* NaiveSynth::getName() const
     return "NaiveSynth";
 }
 
-const char* NaiveSynth::getParamName(int i) const
+const char* NaiveSynth::getActionName(int i) const
 {
     return nullptr;
+}
+
+AudioStream& NaiveSynth::getOutput()
+{
+    return _amp;
 }

@@ -2,6 +2,7 @@
 #define NAIVE_SYNTH_H
 
 #include <Instrument.h>
+#include <Audio.h>
 
 class NaiveSynth : public Instrument {
 
@@ -11,9 +12,17 @@ class NaiveSynth : public Instrument {
 
         void onEvent(Event ev) override;
         const char* getName() const override; 
-        const char* getParamName(int i) const override;
+        const char* getActionName(int i) const override;
+
+        AudioStream& getOutput() override;
 
     private:
+
+        AudioSynthWaveform _wave1;
+        AudioSynthWaveform _wave2;
+        AudioSynthWaveform _wave3;
+        AudioEffectEnvelope _finalEnvelope;
+        AudioAmplifier _amp;
 
 };
 

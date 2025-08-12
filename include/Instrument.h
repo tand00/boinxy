@@ -9,7 +9,11 @@ class Instrument {
 
         virtual void onEvent(Event) = 0;
         virtual const char* getName() const = 0; 
-        virtual const char* getParamName(int i) const = 0;
+        virtual const char* getActionName(int i) const = 0;
+
+        virtual void update() { }
+
+        virtual AudioStream& getOutput() = 0;
 
 };
 

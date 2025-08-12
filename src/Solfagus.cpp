@@ -11,6 +11,21 @@ PROGMEM const int8_t MINOR_CHORD_STEPS[] = { 0, 3, 7, 10 };
 PROGMEM const int8_t DIMINISHED_CHORD_STEPS[] = { 0, 3, 6, 9 };
 PROGMEM const int8_t DOM7_CHORD_STEPS[] = { 0, 4, 7, 10 };
 
+PROGMEM const double NOTES_TUNING_4[] = {
+    261.626,
+    277.183,
+    293.665,
+    311.127,
+    329.628,
+    349.228,
+    369.994,
+    391.995,
+    415.305,
+    440,
+    466.164,
+    493.883
+};
+
 Key Key::basic() const
 {
     switch(type) {
@@ -137,4 +152,10 @@ void Solfagus::dom7Chord(int8_t notes[], uint8_t n) const
     }
 }
 
-
+double Solfagus::noteFrequency(int8_t note)
+{
+    int8_t octave = note / 12;
+    int8_t base = note % 12;
+    double mult = pow(2, octave - 4);
+    return NOTES_TUNING_4[base] * mult;
+}

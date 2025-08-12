@@ -62,6 +62,8 @@ class Solfagus {
         void dimChord(int8_t notes[], uint8_t n = 4) const;
         void dom7Chord(int8_t notes[], uint8_t n = 4) const;
 
+        static double noteFrequency(int8_t note);
+
     private:
 
         Key _key = { 0, Major };

@@ -11,7 +11,7 @@ enum EventType {
 
 struct Event {
     EventType type;
-    int param;
+    int action;
     uint8_t instrument;
 };
 
