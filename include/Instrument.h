@@ -2,6 +2,7 @@
 #define INSTRUMENT_H
 
 #include "Event.h"
+#include <Audio.h>
 
 class Instrument {
 

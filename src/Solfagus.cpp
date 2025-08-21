@@ -26,7 +26,7 @@ PROGMEM const double NOTES_TUNING_4[] = {
     493.883
 };
 
-PROGMEM const char* NOTES_NAMES[] = {
+const char* NOTES_NAMES[] = {
     "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
 };
 
