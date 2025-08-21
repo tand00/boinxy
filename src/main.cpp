@@ -34,13 +34,13 @@ Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 Encoder encoder4(ENCODER_4_A, ENCODER_4_B);
 
-AudioPlaySdWav* samplePlayers[] = { &sdSamplePlayer1, &sdSamplePlayer2, &sdSamplePlayer3, &sdSamplePlayer4 };
+//AudioPlaySdWav* samplePlayers[] = { &sdSamplePlayer1, &sdSamplePlayer2, &sdSamplePlayer3, &sdSamplePlayer4 };
 
 Sequencer sequencer;
 Solfagus solfagus;
 Instrument* instruments[N_INSTRUMENTS] = {
     new NaiveSynth(),
-    new SamplePlayer(samplePlayers, 4)
+    //new SamplePlayer(samplePlayers, 4)
 };
 
 BoinxState state = { LiveInput, 0, instruments, &sequencer, &solfagus };
@@ -66,10 +66,13 @@ void setup()
     }
     Serial.println("Initialized Leds Matrix !");
     Serial.println("Boinx is ready to rock !");
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop() 
 {
+    /*
     sequencer.update();
     switch(state.mode) {
         case LiveInput:
@@ -80,6 +83,6 @@ void loop()
             break;
         default:
             break;
-    }
+    }*/
     i2sOutput.update();
 }

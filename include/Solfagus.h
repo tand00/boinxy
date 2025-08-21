@@ -63,6 +63,7 @@ class Solfagus {
         void dom7Chord(int8_t notes[], uint8_t n = 4) const;
 
         static double noteFrequency(int8_t note);
+        static char* noteName(int8_t note);
 
     private:
 

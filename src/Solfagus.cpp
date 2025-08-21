@@ -26,6 +26,10 @@ PROGMEM const double NOTES_TUNING_4[] = {
     493.883
 };
 
+PROGMEM const char* NOTES_NAMES[] = {
+    "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
+};
+
 Key Key::basic() const
 {
     switch(type) {
@@ -158,4 +162,14 @@ double Solfagus::noteFrequency(int8_t note)
     int8_t base = note % 12;
     double mult = pow(2, octave - 4);
     return NOTES_TUNING_4[base] * mult;
+}
+
+char *Solfagus::noteName(int8_t note)
+{
+    int8_t octave = note / 12;
+    int8_t base = note % 12;
+
+    char octaveStr[2];
+    sprintf(octaveStr, "%d", octave);
+    
 }

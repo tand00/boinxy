@@ -1,13 +1,17 @@
 #include <DrumSynth.h>
 
+#include <Solfagus.h>
+
 DrumSynth::DrumSynth()
 {
     
 }
 
-void DrumSynth::onEvent(Event)
+void DrumSynth::onEvent(Event e)
 {
-    
+    double freq = Solfagus::noteFrequency(e.action);
+    _drumSynth.frequency(freq);
+    _drumSynth.noteOn();
 }
 
 const char* DrumSynth::getName() const
