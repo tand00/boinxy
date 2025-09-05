@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.rml": "html",
+        "cmath": "cpp",
+        "system_error": "cpp"
+    }
+}
