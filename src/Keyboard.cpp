@@ -1,11 +1,14 @@
 #include <Keyboard.h>
 
-Keyboard::Keyboard(uint8_t* pins, uint8_t c_pos) 
-    : _c_pos(c_pos)
+#define OCTAVE_UP
+
+PROGMEM const uint8_t PIANO_KEYS[] = { 0, 3, 5, 6, 7, 10 };
+
+Keyboard::Keyboard() 
 {
-    for(int i = 0 ; i < KEYBOARD_SIZE ; i++) {
-        _buttons[i] = new Button(pins[i]);
-    }
+    // for(int i = 0 ; i < KEYBOARD_SIZE ; i++) {
+    //     _buttons[i] = new Button(&_mcp, _pins[i]);
+    // }
 }
 
 Keyboard::~Keyboard() 
@@ -17,9 +20,13 @@ Keyboard::~Keyboard()
 
 void Keyboard::setup() 
 {
-    for(int i = 0 ; i < KEYBOARD_SIZE ; i++) {
-        _buttons[i]->setup();
+    if(!_mcp.begin_I2C(MCP23XXX_ADDR)) {
+        Serial.println("Unable to initialize MCP !");
     }
+    Serial.println("Initialized MCP !");
+    // for(int i = 0 ; i < KEYBOARD_SIZE ; i++) {
+    //     _buttons[i]->setup();
+    // }
 }
 
 void Keyboard::reset() 

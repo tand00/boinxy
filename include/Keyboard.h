@@ -1,6 +1,8 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include <Adafruit_MCP23X17.h>
+
 #define N_NOTES 127 // MIDI note encoding
 
 #include "Button.h"
@@ -12,7 +14,7 @@ class Keyboard {
 
     public:
 
-        Keyboard(uint8_t* pins, uint8_t c_pos = 1);
+        Keyboard();
         ~Keyboard();
 
         void setup();
@@ -27,6 +29,8 @@ class Keyboard {
         int8_t noteNumber(int8_t button);
 
     private:
+
+        Adafruit_MCP23X17 _mcp;
 
         int8_t _octave = 4;
         uint8_t _c_pos;

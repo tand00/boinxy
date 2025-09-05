@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <Arduino.h>
+#include <Adafruit_MCP23X17.h>
 
 enum ButtonState {
     JustReleased,
@@ -14,7 +15,7 @@ class Button {
 
     public:
 
-        Button(uint8_t pin);
+        Button(Adafruit_MCP23X17* mcp, uint8_t pin);
 
         void setup(bool pullup = true);
         ButtonState state() const;
@@ -25,6 +26,7 @@ class Button {
 
         uint8_t _pin;
         ButtonState _state = Released;
+        Adafruit_MCP23X17* _mcp;
         
 };
 

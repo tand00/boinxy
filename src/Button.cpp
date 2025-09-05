@@ -2,14 +2,14 @@
 
 #include <Arduino.h>
 
-Button::Button(uint8_t pin) : _pin(pin) 
-{
-    
-}
+Button::Button(Adafruit_MCP23X17* mcp, uint8_t pin) 
+    : _pin(pin)
+    , _mcp(mcp)
+{ }
 
 void Button::setup(bool pullup) 
 {
-    pinMode(_pin, pullup ? INPUT_PULLUP : INPUT);
+    _mcp->pinMode(_pin, pullup ? INPUT_PULLUP : INPUT);
 }
 
 ButtonState Button::state() const 
@@ -24,7 +24,7 @@ bool Button::pressed() const
 
 ButtonState Button::update() 
 {
-    bool status = (digitalRead(_pin) == LOW);
+    bool status = (_mcp->digitalRead(_pin) == LOW);
     if(status) {
         if(!pressed()) _state = JustPressed;
         else _state = Pressed;

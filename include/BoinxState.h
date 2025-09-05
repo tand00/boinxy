@@ -23,6 +23,7 @@ struct BoinxState {
     Instrument** instruments;
     Sequencer* sequencer;
     Solfagus* solfagus;
+    bool alter = false;
 
     void execute(Event e) const;
 };

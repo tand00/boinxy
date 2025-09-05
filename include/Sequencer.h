@@ -4,6 +4,8 @@
 #define MAX_SEQUENCER_STEPS 64
 #define MAX_EVENTS_PER_STEP 16
 
+#define DEFAULT_TEMPO 80
+
 #include <Arduino.h>
 #include <Event.h>
 
@@ -17,16 +19,19 @@ class Sequencer {
 
     public:
     
-        unsigned int getTempo() const;
-        void setTempo(unsigned int tempo);
+        int getTempo() const;
+        void setTempo(int tempo);
         void incrTempo();
         void decrTempo();
 
-        unsigned int getTrackLen() const;
-        void setTrackLen(unsigned int len);
+        int getTrackLen() const;
+        void setTrackLen(int len);
 
-        unsigned int getCurrentStep() const;
-        void setCurrentStep(unsigned int step, bool reset_time = true);
+        int getStepsPerPulse() const;
+        void setStepsPerPulse(int spp);
+
+        int getCurrentStep() const;
+        void setCurrentStep(int step, bool reset_time = true);
         
         void update();
         void reset();
@@ -36,6 +41,8 @@ class Sequencer {
         void setRecord(const bool record);
         bool isRecording() const;
 
+        void playPause();
+        bool isPaused() const;
         void pause();
         void backward();
         void forward();
@@ -45,14 +52,17 @@ class Sequencer {
 
         bool step_flag = false;
         bool sequence_flag = false;
+        bool pulse_flag = false;
 
     private:
 
-        unsigned int _tempo = 80;
-        unsigned int _track_len = 16;
-        unsigned int _current_step = 0;
+        int _tempo = DEFAULT_TEMPO;
+        int _track_len = 32;
+        int _current_step = 0;
         elapsedMicros _elapsed = 0;
         int _date_backup = 0;
+
+        int _steps_per_pulse = 4;
 
         bool _record = false;
 

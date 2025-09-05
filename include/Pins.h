@@ -7,49 +7,42 @@
 
 // LED MATRIX SETTINGS ---------------------------------------------------------
 
-#define MATRIX_DATA 1
-#define MATRIX_CLK 1
-#define MATRIX_CS 1
+#define MATRIX_DATA 11
+#define MATRIX_CLK 13
+#define MATRIX_CS 10
 #define MATRIX_COUNT 4
-
-// OLED SCREEN SETTINGS --------------------------------------------------------
-
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 128
-#define OLED_RESET -1
-#define SCREEN_ADDR 0x3C
 
 // ENCODERS --------------------------------------------------------------------
 
-#define ENCODER_1_A 1
-#define ENCODER_1_B 1
-#define ENCODER_1_S 1
-#define ENCODER_2_A 1
-#define ENCODER_2_B 1
-#define ENCODER_2_S 1
-#define ENCODER_3_A 1
-#define ENCODER_3_B 1
-#define ENCODER_3_S 1
-#define ENCODER_4_A 1
-#define ENCODER_4_B 1
-#define ENCODER_4_S 1
+#define ENCODER_1_A 34
+#define ENCODER_1_B 35
+#define ENCODER_1_S 2
+#define ENCODER_2_A 30
+#define ENCODER_2_B 31
+#define ENCODER_2_S 32
+#define ENCODER_3_A 8
+#define ENCODER_3_B 9
+#define ENCODER_3_S 6
+#define ENCODER_4_A 26
+#define ENCODER_4_B 27
+#define ENCODER_4_S 41
 
 // JOYSTICK --------------------------------------------------------------------
 
-#define JOYSTICK_X 1
-#define JOYSTICK_Y 1
-#define JOYSTICK_S 1
+#define JOYSTICK_X 25
+#define JOYSTICK_Y 24
+#define JOYSTICK_S 40
 
-// TOUCH SENSOR ----------------------------------------------------------------
+// EXT SENSOR ----------------------------------------------------------------
 
-#define TOUCH_S 1
+#define EXT_S 22
 
 // BUTTONS ---------------------------------------------------------------------
 
-#define ALTER_BUTTON 1
-#define RECORD_BUTTON 1
-#define BUTTON_2 1
-#define BUTTON_3 1
+#define ALTER_BUTTON 36
+#define RECORD_BUTTON 37
+#define BUTTON_2 39
+#define BUTTON_3 38
 
 // MCP -------------------------------------------------------------------------
 
