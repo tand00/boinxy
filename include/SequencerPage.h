@@ -6,6 +6,8 @@
 #include <SamplePlayer.h>
 #include <SampleLibrary.h>
 
+#define MAX_SELECTION 4
+
 class SequencerPage : public AppPage {
 
     public:
@@ -14,7 +16,19 @@ class SequencerPage : public AppPage {
 
         const char* name() const override;
 
+        void enter(BoinxState* state) override;
+        void leave(BoinxState* state) override;
+
         void update(BoinxState* state) override;
+
+        void displaySample(BoinxState* state);
+
+        Event generateEvent();
+
+        uint8_t selected = 0;
+        uint8_t selection_len = 1;
+        uint8_t channel = 0;
+        bool update_led = false;
 
     private:
 

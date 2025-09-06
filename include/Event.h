@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define ACTION_NONE -1
+
 enum EventType {
     Pulse,
     NoteOn,
@@ -10,9 +12,11 @@ enum EventType {
 };
 
 struct Event {
-    EventType type;
-    int action;
-    uint8_t instrument;
+    EventType type = Pulse;
+    int action = ACTION_NONE;
+    uint8_t instrument = 0;
+
+    bool operator==(const Event& other) const;
 };
 
 #endif

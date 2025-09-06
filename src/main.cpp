@@ -9,6 +9,7 @@
 #include <USBHost_t36.h>
 #include <LedControl.h>
 #include <Bounce.h>
+#include <EEPROM.h>
 
 // Peripherals
 #include <Screen.h>
@@ -56,7 +57,7 @@ Bounce btn3(BUTTON_3, 10);
 // Interfaces
 Sequencer sequencer;
 Keyboard keyboard;
-JoyStick joystick(JOYSTICK_X, JOYSTICK_Y);
+JoyStick joystick(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_S);
 Screen screen;
 SampleLibrary samples;
 
@@ -65,10 +66,13 @@ Solfagus solfagus;
 
 // Instruments
 SamplePlayer player;
+NaiveSynth naiveSynth;
+
 Instrument* instruments[N_INSTRUMENTS] = {
-    new NaiveSynth(),
-    &player
+    &naiveSynth, &player
 };
+AudioConnection sampleOut;
+AudioConnection naiveSynthOut;
 
 // App pages
 LivePage livePage;
@@ -90,6 +94,7 @@ void setup()
     samples.setup();
     for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
         leds.shutdown(i, false);
+        leds.setIntensity(i, 0);
         leds.clearDisplay(i);
     }
     Serial.println("Initialized Leds Matrix !");
@@ -106,21 +111,32 @@ void setup()
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, HIGH);
 
+    state.page_index = (EEPROM.read(0) % N_PAGES);
+    state.page()->enter(&state);
+
     Serial.println("Boinx is ready to rock !");
 
-    AudioMemory(32);
+    sampleOut.connect(player.getOutput(), 0, outMixer, 1);
+    naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
+
+    AudioMemory(128);
     AudioProcessorUsageMaxReset();
     AudioMemoryUsageMaxReset();
 }
 
 void updateMatrixSequencerDisplay() {
-    if(sequencer.step_flag) {
+    if(sequencer.step_flag || sequencerPage.update_led) {
         int step = sequencer.getCurrentStep();
         int matrix = step / 8;
         int col = 7 - (step % 8);
         for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
             leds.clearDisplay(i);
-            leds.setIntensity(i, sequencer.pulse_flag ? 4 : 0);
+            // leds.setIntensity(i, sequencer.pulse_flag ? 4 : 0);
+        }
+        if(state.page_index == SEQUENCER_PAGE_I) {
+            for(int i = 0 ; i < sequencerPage.selection_len ; i++) {
+                leds.setRow(i + sequencerPage.selected, sequencerPage.channel, 0b11111111);
+            }
         }
         leds.setLed(matrix, 7, col, true);
     }
@@ -148,12 +164,17 @@ void loop()
     if(btn3.update() && btn3.fallingEdge()) {
         if(state.alter) {
             state.nextPage();
+            EEPROM.write(0, state.page_index);
         } else {
             // TODO
         }
     }
     updateSequencerControl();
     updateMatrixSequencerDisplay();
+
+    if(sequencer.sequence_flag) {
+        Serial.println(String("Max usage : ") + AudioMemoryUsageMax());
+    }
     
     state.update();
 }

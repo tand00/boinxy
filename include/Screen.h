@@ -28,6 +28,8 @@ class Screen {
         void forceUpdate();
 
         void message(String msg);
+        void pageMessage(String msg);
+        void clearPageMessage();
 
         Adafruit_SSD1306 display;
 
@@ -35,6 +37,7 @@ class Screen {
 
         elapsedMillis _messageTimeout;
         String _msg;
+        String _page_msg;
         bool _update = false;
 
         BoinxState _cache_state;

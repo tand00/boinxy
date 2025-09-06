@@ -1,5 +1,7 @@
 #include <SamplePlayer.h>
 
+AudioSynthSimpleDrum drumSynth;
+
 SamplePlayer::SamplePlayer()
 {
     _patchCord1.connect(_players[0], 0, _sampleMixer, 0);
@@ -15,8 +17,14 @@ void SamplePlayer::playSample(int i)
     playSample(filename);
 }
 
+void SamplePlayer::playSample(const String &path)
+{
+    playSample(path.c_str());
+}
+
 void SamplePlayer::playSample(const char *path)
 {
+    if(strlen(path) == 0) return;
     uint8_t selected = 0;
     uint32_t max_pos = 0;
     for(uint8_t i = 0 ; i < N_PLAYERS ; i++) {
@@ -59,6 +67,11 @@ void SamplePlayer::registerSample(String path)
 void SamplePlayer::registerSampleAt(String path, uint8_t i)
 {
     _samples[i % MAX_SAMPLES] = path;
+}
+
+uint8_t SamplePlayer::channels() const
+{
+    return _n_samples;
 }
 
 AudioStream& SamplePlayer::getOutput()

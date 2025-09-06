@@ -1,7 +1,6 @@
 #ifndef BOINX_STATE_H
 #define BOINX_STATE_H
 
-#include <AppPage.h>
 #include <Instrument.h>
 #include <Sequencer.h>
 #include <Solfagus.h>
@@ -13,7 +12,14 @@
 #define N_INSTRUMENTS 2
 #define N_PAGES 2
 
+#define NAIVE_SYNTH_I 0
+#define SAMPLE_PLAYER_I 1
+
+#define LIVE_PAGE_I 0
+#define SEQUENCER_PAGE_I 1
+
 class Screen;
+class AppPage;
 
 struct BoinxState {
     AppPage** pages;

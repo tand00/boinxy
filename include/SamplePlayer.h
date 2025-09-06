@@ -5,7 +5,7 @@
 #include <Instrument.h>
 
 #define N_PLAYERS 4
-#define MAX_SAMPLES 28
+#define MAX_SAMPLES 7
 
 class SamplePlayer : public Instrument {
 
@@ -14,6 +14,7 @@ class SamplePlayer : public Instrument {
         SamplePlayer();
 
         void playSample(int i);
+        void playSample(const String& path);
         void playSample(const char* path);
 
         void onEvent(Event ev) override;
@@ -22,6 +23,8 @@ class SamplePlayer : public Instrument {
 
         void registerSample(String path);
         void registerSampleAt(String path, uint8_t i);
+
+        uint8_t channels() const;
 
         AudioStream& getOutput() override;
 

@@ -1,6 +1,7 @@
 #include <BoinxState.h>
 
 #include <Screen.h>
+#include <AppPage.h>
 
 void BoinxState::execute(Event e) const 
 {
@@ -20,6 +21,7 @@ AppPage *BoinxState::page()
 void BoinxState::nextPage()
 {
     page()->leave(this);
+    screen->clearPageMessage();
     page_index = (page_index + 1) % N_PAGES;
     page()->enter(this);
 }

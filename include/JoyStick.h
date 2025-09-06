@@ -3,15 +3,16 @@
 
 #include <Arduino.h>
 #include <Button.h>
+#include <Bounce.h>
 
-#define DOWN_THRESHOLD (100)
-#define UP_THRESHOLD (-100)
+#define DOWN_THRESHOLD (-300)
+#define UP_THRESHOLD (300)
 
 class JoyStick {
 
     public:
 
-        JoyStick(uint8_t pin_x, uint8_t pin_y);
+        JoyStick(uint8_t pin_x, uint8_t pin_y, uint8_t pin_btn);
 
         void setup();
 
@@ -25,10 +26,13 @@ class JoyStick {
         float xPosition() const;
         float yPosition() const;
 
+        Bounce button;
+
     private:
 
         uint8_t _x_pin;
         uint8_t _y_pin;
+        uint8_t _btn_pin;
 
         ButtonState _down = Released;
         ButtonState _up = Released;

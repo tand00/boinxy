@@ -64,13 +64,7 @@ void Sequencer::update()
         step_flag = true;
         if(_current_step == 0) sequence_flag = true;
         if(_current_step % _steps_per_pulse == 0) pulse_flag = true;
-        triggerStep();
     }
-}
-
-void Sequencer::triggerStep()
-{
-    // TODO
 }
 
 void Sequencer::toggleRecord()
@@ -94,7 +88,6 @@ void Sequencer::reset()
     _elapsed = 0;
     step_flag = true;
     sequence_flag = true;
-    triggerStep();
 }
 
 void Sequencer::playPause()
@@ -135,4 +128,44 @@ unsigned long Sequencer::usStepLen()
 {
     double beat_duration = (60.0 / ((double) _tempo * _steps_per_pulse)) * 1.0E6;
     return beat_duration;
+}
+
+int Sequencer::eventIndex(int step, const Event &e) const
+{
+    for(int i = 0 ; i < _events_count[step] ; i++) {
+        if(_events[step][i] == e) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void Sequencer::addEvent(int step, Event e)
+{
+    if(eventIndex(step, e) >= 0) return;
+    int n_events = getEventsCount(step);
+    if(n_events == MAX_EVENTS_PER_STEP) return;
+    _events[step][n_events] = e;
+    _events_count[step]++;
+}
+
+void Sequencer::removeEvent(int step, const Event &e)
+{
+    int to_remove = eventIndex(step, e);
+    int n_events = getEventsCount(step);
+    if(to_remove == -1) return;
+    for(int i = to_remove ; i++ ; i < n_events - 1) {
+        _events[step][i] = _events[step][i + 1];
+    }
+    _events_count[step]--;
+}
+
+uint8_t Sequencer::getEventsCount(int step) const
+{
+    return _events_count[step];
+}
+
+Event *Sequencer::getEvents(int step)
+{
+    return _events[step];
 }

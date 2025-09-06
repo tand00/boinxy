@@ -2,8 +2,7 @@
 #define APP_PAGE_H
 
 #include <Arduino.h>
-
-class BoinxState;
+#include <BoinxState.h>
 
 class AppPage {
     

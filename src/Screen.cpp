@@ -1,6 +1,7 @@
 #include "Screen.h"
 
 #include <BoinxState.h>
+#include <AppPage.h>
 
 Screen::Screen()
     : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET)
@@ -48,8 +49,10 @@ void Screen::buildGenericScreen()
         display.setCursor(64, 0);
         display.print("ALT");
     }
-    display.setCursor(0, 32);
+    display.setCursor(0, 16);
     display.println(_msg);
+    display.setCursor(0,32);
+    display.print(_page_msg);
 }
 
 void Screen::forceUpdate()
@@ -62,4 +65,15 @@ void Screen::message(String msg)
     _msg = msg;
     _messageTimeout = 0;
     _update = true;
+}
+
+void Screen::pageMessage(String msg)
+{
+    _page_msg = msg;
+    _update = true;
+}
+
+void Screen::clearPageMessage()
+{
+    pageMessage(String());
 }

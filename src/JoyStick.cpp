@@ -1,14 +1,17 @@
 #include <JoyStick.h>
 
-JoyStick::JoyStick(uint8_t pin_x, uint8_t pin_y) 
+JoyStick::JoyStick(uint8_t pin_x, uint8_t pin_y, uint8_t pin_btn) 
     : _x_pin(pin_x)
     , _y_pin(pin_y)
+    , _btn_pin(pin_btn)
+    , button(pin_btn, 10)
 { }
 
 void JoyStick::setup()
 {
     pinMode(_x_pin, INPUT);
     pinMode(_y_pin, INPUT);
+    pinMode(_btn_pin, INPUT_PULLUP);
 }
 
 ButtonState JoyStick::up() const
@@ -33,6 +36,7 @@ ButtonState JoyStick::right() const
 
 void JoyStick::update()
 {
+    button.update();
     int xPosInt = analogRead(_x_pin) - 512;
     int yPosInt = analogRead(_y_pin) - 512;
     if(xPosInt < DOWN_THRESHOLD) {
@@ -51,12 +55,12 @@ void JoyStick::update()
         if(pressed(_right)) _right = JustReleased;
         else _right = Released;
     }
-    if(yPosInt < DOWN_THRESHOLD) {
+    if(yPosInt > UP_THRESHOLD) {
         if(!pressed(_down)) _down = JustPressed;
         else _down = Pressed;
         if(pressed(_up)) _up = JustReleased;
         else _up = Released;
-    } else if(yPosInt > UP_THRESHOLD) {
+    } else if(yPosInt < DOWN_THRESHOLD) {
         if(pressed(_down)) _down = Released;
         else _down = Released;
         if(!pressed(_up)) _up = JustPressed;

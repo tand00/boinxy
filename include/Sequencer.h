@@ -50,6 +50,12 @@ class Sequencer {
 
         unsigned long usStepLen();
 
+        int eventIndex(int step, const Event& e) const;
+        void addEvent(int step, Event e);
+        void removeEvent(int step, const Event& e);
+        uint8_t getEventsCount(int step) const;
+        Event* getEvents(int step);
+
         bool step_flag = false;
         bool sequence_flag = false;
         bool pulse_flag = false;
@@ -69,7 +75,7 @@ class Sequencer {
         SeqDirection _direction = Forward;
 
         Event _events[MAX_SEQUENCER_STEPS][MAX_EVENTS_PER_STEP];
-        uint8_t _events_indexs[MAX_SEQUENCER_STEPS] = { 0 };
+        uint8_t _events_count[MAX_SEQUENCER_STEPS] = { 0 };
         
 };
 
