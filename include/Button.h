@@ -11,6 +11,8 @@ enum ButtonState {
     Pressed,
 };
 
+bool pressed(const ButtonState& state);
+
 class Button {
 
     public:
@@ -19,7 +21,6 @@ class Button {
 
         void setup(bool pullup = true);
         ButtonState state() const;
-        bool pressed() const;
         ButtonState update();
 
     private:

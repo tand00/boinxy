@@ -2,6 +2,8 @@
     "files.associations": {
         "*.rml": "html",
         "cmath": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "random": "cpp",
+        "typeinfo": "cpp"
     }
 }

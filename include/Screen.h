@@ -12,13 +12,15 @@
 
 #define MESSAGE_TIMEOUT 2000
 
+class BoinxState;
+
 class Screen {
 
     public:
 
         Screen();
 
-        void setup();
+        void setup(BoinxState state);
         void update(BoinxState* state);
 
         void buildGenericScreen();
@@ -35,7 +37,7 @@ class Screen {
         String _msg;
         bool _update = false;
 
-        BoinxState cache_state;
+        BoinxState _cache_state;
 
 };
 

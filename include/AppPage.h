@@ -2,22 +2,17 @@
 #define APP_PAGE_H
 
 #include <Arduino.h>
-#include "BoinxState.h"
+
+class BoinxState;
 
 class AppPage {
     
     public:
-
-        AppPage(BoinxState* state)
-            : _state(state) {}
         
-        virtual void enter() {};
-        virtual void update() = 0;
-        virtual void leave() {};
-
-    private:
-
-        BoinxState* _state = nullptr;
+        virtual const char* name() const = 0;
+        virtual void enter(BoinxState* state) {};
+        virtual void update(BoinxState* state) = 0;
+        virtual void leave(BoinxState* state) {};
 
 };
 

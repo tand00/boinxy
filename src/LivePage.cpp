@@ -1,6 +1,11 @@
 #include <LivePage.h>
 
-void LivePage::update() 
+const char *LivePage::name() const
+{
+    return "Live";
+}
+
+void LivePage::update(BoinxState* state)
 {
     
 }

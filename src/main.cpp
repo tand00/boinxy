@@ -2,6 +2,7 @@
 
 #include <Pins.h>
 
+// Libraries
 #include <Adafruit_MCP23X17.h>
 #include <Adafruit_SSD1306.h>
 #include <Encoder.h>
@@ -9,25 +10,34 @@
 #include <LedControl.h>
 #include <Bounce.h>
 
+// Peripherals
 #include <Screen.h>
 #include <Keyboard.h>
 #include <BoinxState.h>
 #include <BoinxAudio.h>
 #include <Button.h>
+#include <JoyStick.h>
+
+// Models
 #include <AppPage.h>
 #include <Sequencer.h>
 #include <Solfagus.h>
+#include <SampleLibrary.h>
 
+// Instruments
 #include <Instrument.h>
 #include <SamplePlayer.h>
 #include <NaiveSynth.h>
 
+// Pages
 #include <LivePage.h>
 #include <SequencerPage.h>
 
+// USB MIDI
 USBHost usb_host;
 MIDIDevice midi_in(usb_host);
 
+// Electronic inputs
 LedControl leds(MATRIX_DATA, MATRIX_CLK, MATRIX_CS, MATRIX_COUNT);
 Adafruit_MCP23X17 mcp;
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
@@ -43,20 +53,30 @@ Bounce btnRecord(RECORD_BUTTON, 10);
 Bounce btn2(BUTTON_2, 10);
 Bounce btn3(BUTTON_3, 10);
 
-//AudioPlaySdWav* samplePlayers[] = { &sdSamplePlayer1, &sdSamplePlayer2, &sdSamplePlayer3, &sdSamplePlayer4 };
-Screen screen;
+// Interfaces
 Sequencer sequencer;
 Keyboard keyboard;
+JoyStick joystick(JOYSTICK_X, JOYSTICK_Y);
+Screen screen;
+SampleLibrary samples;
+
+// Models
 Solfagus solfagus;
+
+// Instruments
+SamplePlayer player;
 Instrument* instruments[N_INSTRUMENTS] = {
     new NaiveSynth(),
-    //new SamplePlayer(samplePlayers, 4)
+    &player
 };
 
-BoinxState state = { LiveInput, 0, instruments, &sequencer, &solfagus, false };
+// App pages
+LivePage livePage;
+SequencerPage sequencerPage(&player, &samples);
+AppPage* pages[] = {&livePage, &sequencerPage};
 
-LivePage livePage(&state);
-SequencerPage sequencerPage(&state);
+// State
+BoinxState state = {pages, 0, instruments, &sequencer, &solfagus, &joystick, &keyboard, &screen, false };
 
 void setup() 
 {
@@ -65,7 +85,9 @@ void setup()
     Serial.println("[BOINX]");
     Serial.println("Initializing...");
     keyboard.setup();
-    screen.setup();
+    screen.setup(state);
+    joystick.setup();
+    samples.setup();
     for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
         leds.shutdown(i, false);
         leds.clearDisplay(i);
@@ -85,6 +107,10 @@ void setup()
     digitalWrite(LED_BUILTIN, HIGH);
 
     Serial.println("Boinx is ready to rock !");
+
+    AudioMemory(32);
+    AudioProcessorUsageMaxReset();
+    AudioMemoryUsageMaxReset();
 }
 
 void updateMatrixSequencerDisplay() {
@@ -93,8 +119,8 @@ void updateMatrixSequencerDisplay() {
         int matrix = step / 8;
         int col = 7 - (step % 8);
         for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
-            leds.setIntensity(i, sequencer.pulse_flag ? 8 : 0);
             leds.clearDisplay(i);
+            leds.setIntensity(i, sequencer.pulse_flag ? 4 : 0);
         }
         leds.setLed(matrix, 7, col, true);
     }
@@ -119,18 +145,15 @@ void loop()
     if(btnAlter.update()) {
         state.alter = btnAlter.fallingEdge();
     }
+    if(btn3.update() && btn3.fallingEdge()) {
+        if(state.alter) {
+            state.nextPage();
+        } else {
+            // TODO
+        }
+    }
     updateSequencerControl();
     updateMatrixSequencerDisplay();
-    screen.update(&state);
-    /*
-    switch(state.mode) {
-        case LiveInput:
-            livePage.update();
-            break;
-        case SequencerInput:
-            sequencerPage.update();
-            break;
-        default:
-            break;
-    }*/
+    
+    state.update();
 }

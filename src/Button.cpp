@@ -17,20 +17,20 @@ ButtonState Button::state() const
     return _state;
 }
 
-bool Button::pressed() const 
-{
-    return (_state == Pressed) || (_state == JustPressed);
-}
-
 ButtonState Button::update() 
 {
     bool status = (_mcp->digitalRead(_pin) == LOW);
     if(status) {
-        if(!pressed()) _state = JustPressed;
+        if(!pressed(state())) _state = JustPressed;
         else _state = Pressed;
     } else {
-        if(pressed()) _state = JustReleased;
+        if(!pressed(state())) _state = JustReleased;
         else _state = Released;
     }
     return _state;
+}
+
+bool pressed(const ButtonState &state)
+{
+    return (state == Pressed) || (state == JustPressed);
 }

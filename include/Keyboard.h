@@ -3,11 +3,8 @@
 
 #include <Adafruit_MCP23X17.h>
 
-#define N_NOTES 127 // MIDI note encoding
+#include <Button.h>
 
-#include "Button.h"
-
-// Last two keys are octave down then up
 #define KEYBOARD_SIZE 14
 
 class Keyboard {
@@ -15,28 +12,25 @@ class Keyboard {
     public:
 
         Keyboard();
-        ~Keyboard();
 
         void setup();
         void update();
-        void reset();
 
-        int8_t octave() const;
-        void octaveUp();
-        void octaveDown();
-        void setOctave(int8_t o);
+        ButtonState up() const;
+        ButtonState down() const;
 
-        int8_t noteNumber(int8_t button);
+        ButtonState pianoKey(uint8_t i) const;
+        ButtonState bottomKey(uint8_t i) const;
+        ButtonState topKey(uint8_t i) const;
 
     private:
 
         Adafruit_MCP23X17 _mcp;
 
-        int8_t _octave = 4;
-        uint8_t _c_pos;
-        Button* _buttons[KEYBOARD_SIZE];
+        Button _up;
+        Button _down;
 
-        bool _notes_status[N_NOTES] = { false };
+        Button _keys[KEYBOARD_SIZE];
 
 };
 

@@ -10,7 +10,13 @@ SamplePlayer::SamplePlayer()
 
 void SamplePlayer::playSample(int i)
 {
+    if(_n_samples == 0) return;
     const char* filename = getActionName(i);
+    playSample(filename);
+}
+
+void SamplePlayer::playSample(const char *path)
+{
     uint8_t selected = 0;
     uint32_t max_pos = 0;
     for(uint8_t i = 0 ; i < N_PLAYERS ; i++) {
@@ -25,12 +31,12 @@ void SamplePlayer::playSample(int i)
             }
         }
     }
-    _players[selected].play(filename);
+    _players[selected].play(path);
 }
 
 void SamplePlayer::onEvent(Event ev)
 {
-    if(ev.type != Pulse) return;
+    if(ev.type == NoteOff) return;
     playSample(ev.action);
 }
 
@@ -41,7 +47,18 @@ const char* SamplePlayer::getName() const
 
 const char* SamplePlayer::getActionName(int i) const
 {
-    return "samples/000.wav";
+    return _samples[i % _n_samples].c_str();
+}
+
+void SamplePlayer::registerSample(String path)
+{
+    _samples[_n_samples] = path;
+    _n_samples = (_n_samples + 1) % MAX_SAMPLES;
+}
+
+void SamplePlayer::registerSampleAt(String path, uint8_t i)
+{
+    _samples[i % MAX_SAMPLES] = path;
 }
 
 AudioStream& SamplePlayer::getOutput()

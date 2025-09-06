@@ -5,6 +5,7 @@
 #include <Instrument.h>
 
 #define N_PLAYERS 4
+#define MAX_SAMPLES 28
 
 class SamplePlayer : public Instrument {
 
@@ -13,14 +14,21 @@ class SamplePlayer : public Instrument {
         SamplePlayer();
 
         void playSample(int i);
+        void playSample(const char* path);
 
         void onEvent(Event ev) override;
         const char* getName() const override; 
         const char* getActionName(int i) const override;
 
+        void registerSample(String path);
+        void registerSampleAt(String path, uint8_t i);
+
         AudioStream& getOutput() override;
 
     private:
+
+        String _samples[MAX_SAMPLES];
+        uint8_t _n_samples = 0;
 
         AudioPlaySdWav _players[N_PLAYERS];
         AudioMixer4 _sampleMixer;

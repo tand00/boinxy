@@ -1,11 +1,14 @@
 #include "Screen.h"
 
+#include <BoinxState.h>
+
 Screen::Screen()
     : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET)
 { }
 
-void Screen::setup()
+void Screen::setup(BoinxState state)
 {
+    _cache_state = state;
     if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDR)) {
         Serial.println("Unable to initialize display !");
         return;
@@ -23,9 +26,9 @@ void Screen::update(BoinxState* state)
         _msg = "";
         _update = true;
     }
-    if(state->alter != cache_state.alter) {
+    if(state->has_changed(_cache_state)) {
         _update = true;
-        cache_state = *state;
+        _cache_state = *state;
     }
     if(_update) {
         display.clearDisplay();
@@ -40,8 +43,8 @@ void Screen::buildGenericScreen()
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0,0);
-    display.print("Boinx");
-    if(cache_state.alter) {
+    display.print(_cache_state.page()->name());
+    if(_cache_state.alter) {
         display.setCursor(64, 0);
         display.print("ALT");
     }

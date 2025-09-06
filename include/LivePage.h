@@ -5,12 +5,12 @@
 
 class LivePage : public AppPage {
 
-    using AppPage::AppPage;
-
     public:
 
-        void update() override;
+        const char* name() const override;
 
+        void update(BoinxState* state) override;
+        
         void toggleRecord();
 
     private:
