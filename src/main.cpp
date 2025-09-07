@@ -119,7 +119,7 @@ void setup()
     sampleOut.connect(player.getOutput(), 0, outMixer, 1);
     naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
 
-    AudioMemory(128);
+    AudioMemory(16);
     AudioProcessorUsageMaxReset();
     AudioMemoryUsageMaxReset();
 }
@@ -138,7 +138,21 @@ void updateMatrixSequencerDisplay() {
                 leds.setRow(i + sequencerPage.selected, sequencerPage.channel, 0b11111111);
             }
         }
-        leds.setLed(matrix, 7, col, true);
+        for(int e_step = 0 ; e_step < sequencer.getTrackLen() ; e_step++) {
+            uint8_t n_events = sequencer.getEventsCount(e_step);
+            Event* events = sequencer.getEvents(e_step);
+            for(uint8_t e_i = 0 ; e_i < n_events ; e_i++) {
+                if(
+                    events[e_i].instrument == SAMPLE_PLAYER_I &&
+                    events[e_i].type == Pulse
+                ) {
+                    int led = events[e_i].action;
+                    leds.setLed(e_step / 8, led, 7 - (e_step % 8), true);
+                }
+            }
+        }
+        leds.setColumn(matrix, col, 0b11111111);
+        //leds.setLed(matrix, 7, col, true);
     }
 }
 
@@ -174,6 +188,7 @@ void loop()
 
     if(sequencer.sequence_flag) {
         Serial.println(String("Max usage : ") + AudioMemoryUsageMax());
+        Serial.println(String("Max proc : ") + AudioProcessorUsage());
     }
     
     state.update();

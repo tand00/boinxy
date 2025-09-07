@@ -35,7 +35,6 @@ class Sequencer {
         
         void update();
         void reset();
-        void triggerStep();
 
         void toggleRecord();
         void setRecord(const bool record);
@@ -53,8 +52,11 @@ class Sequencer {
         int eventIndex(int step, const Event& e) const;
         void addEvent(int step, Event e);
         void removeEvent(int step, const Event& e);
+        void toggleEvent(int step, Event e);
         uint8_t getEventsCount(int step) const;
+        uint8_t getEventsCount() const;
         Event* getEvents(int step);
+        Event* getEvents();
 
         bool step_flag = false;
         bool sequence_flag = false;

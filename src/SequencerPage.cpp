@@ -86,8 +86,19 @@ void SequencerPage::update(BoinxState* state)
     }
     if(state->keyboard->bottomKey(0) == JustPressed) {
         Event e = generateEvent();
-        for(int i = 0 ; i < 8 * selected ; i++) {
+        for(int i = 0 ; i < 8 * selection_len ; i++) {
             state->sequencer->removeEvent(selected * 8 + i, e);
+        }
+        update_led = true;
+    }
+    for(int i = 0 ; i < 8 ; i++) {
+        if(state->keyboard->bottomKey(i + 1) == JustPressed) {
+            Event e = generateEvent();
+            for(int bar = 0 ; bar < selection_len ; bar++) {
+                int step = (selected * 8) + (bar * 8) + i;
+                state->sequencer->toggleEvent(step, e);
+            }
+            update_led = true;
         }
     }
     if(update) {

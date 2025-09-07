@@ -154,7 +154,7 @@ void Sequencer::removeEvent(int step, const Event &e)
     int to_remove = eventIndex(step, e);
     int n_events = getEventsCount(step);
     if(to_remove == -1) return;
-    for(int i = to_remove ; i++ ; i < n_events - 1) {
+    for(int i = to_remove ; i < n_events - 1 ; i++) {
         _events[step][i] = _events[step][i + 1];
     }
     _events_count[step]--;
@@ -165,7 +165,34 @@ uint8_t Sequencer::getEventsCount(int step) const
     return _events_count[step];
 }
 
+uint8_t Sequencer::getEventsCount() const
+{
+    return _events_count[getCurrentStep()];
+}
+
+void Sequencer::toggleEvent(int step, Event e)
+{
+    int to_remove = eventIndex(step, e);
+    int n_events = getEventsCount(step);
+    if(to_remove >= 0) {
+        for(int i = to_remove ; i < n_events - 1 ; i++) {
+            _events[step][i] = _events[step][i + 1];
+        }
+        _events_count[step]--;
+    } else {
+        if(n_events == MAX_EVENTS_PER_STEP) return;
+        _events[step][n_events] = e;
+        _events_count[step]++;
+    }
+    
+}
+
 Event *Sequencer::getEvents(int step)
 {
     return _events[step];
+}
+
+Event *Sequencer::getEvents()
+{
+    return _events[getCurrentStep()];
 }

@@ -32,4 +32,12 @@ void BoinxState::update()
     keyboard->update();
     page()->update(this);
     screen->update(this);
+
+    if(sequencer->step_flag) {
+        uint8_t n_events = sequencer->getEventsCount();
+        Event* events = sequencer->getEvents();
+        for(int i = 0 ; i < n_events ; i++) {
+            execute(events[i]);
+        }
+    }
 }

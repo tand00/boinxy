@@ -5,7 +5,7 @@
 #include <Instrument.h>
 
 #define N_PLAYERS 4
-#define MAX_SAMPLES 7
+#define MAX_SAMPLES 8
 
 class SamplePlayer : public Instrument {
 
@@ -35,6 +35,7 @@ class SamplePlayer : public Instrument {
 
         AudioPlaySdWav _players[N_PLAYERS];
         AudioMixer4 _sampleMixer;
+        uint8_t _player_index = 0;
 
         // Assuming Mono
         AudioConnection _patchCord1;
