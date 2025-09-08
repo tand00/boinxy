@@ -6,6 +6,7 @@
 #include <Button.h>
 
 #define KEYBOARD_SIZE 14
+#define FIRST_KEYBOARD_NOTE -1
 
 class Keyboard {
 

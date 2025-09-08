@@ -27,27 +27,12 @@ void SamplePlayer::playSample(const char *path)
     if(strlen(path) == 0) return;
     uint8_t selected = _player_index;
     _player_index = (_player_index + 1) % N_PLAYERS;
-    if(_players[selected].isPlaying()) {
-        selected = _player_index;
-        _player_index = (_player_index + 1) % N_PLAYERS;
+    for(int i = 0 ; i < N_PLAYERS ; i++) {
+        if(_players[selected].isPlaying()) {
+            selected = _player_index;
+            _player_index = (_player_index + 1) % N_PLAYERS;
+        }
     }
-    // uint32_t max_pos = 0;
-    // for(uint8_t i = 0 ; i < N_PLAYERS ; i++) {
-    //     if(_players[i].isStopped() && _players[i]) {
-    //         Serial.println("is stopped !");
-    //         selected = i;
-    //         break;
-    //     // } else if() {
-    //     //     selected = i;
-    //     //     break;
-    //     } else {
-    //         uint32_t pos = _players[i].positionMillis();
-    //         if(pos > max_pos) {
-    //             max_pos = pos;
-    //             selected = i;
-    //         }
-    //     }
-    // }
     _players[selected].play(path);
 }
 

@@ -9,11 +9,14 @@
 #include <JoyStick.h>
 #include <Keyboard.h>
 
+// INSTRUMENTS CONSTANTS
 #define N_INSTRUMENTS 2
-#define N_PAGES 2
 
 #define NAIVE_SYNTH_I 0
 #define SAMPLE_PLAYER_I 1
+
+// PAGES CONSTANTS
+#define N_PAGES 2
 
 #define LIVE_PAGE_I 0
 #define SEQUENCER_PAGE_I 1
@@ -31,6 +34,7 @@ struct BoinxState {
     Keyboard* keyboard;
     Screen* screen;
     bool alter = false;
+    bool change_signal = false;
 
     void execute(Event e) const;
     bool has_changed(const BoinxState& other) const;

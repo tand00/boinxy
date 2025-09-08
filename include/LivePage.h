@@ -9,13 +9,20 @@ class LivePage : public AppPage {
 
         const char* name() const override;
 
+        void enter(BoinxState* state) override;
         void update(BoinxState* state) override;
+        void leave(BoinxState* state) override;
         
         void toggleRecord();
+
+        void displayPage(BoinxState* state);
+
+        int noteIndex(const int i) const;
 
     private:
 
         uint8_t _instrument = 0;
+        int _octave = 4;
         bool _record = false;
         
 };

@@ -71,8 +71,8 @@ NaiveSynth naiveSynth;
 Instrument* instruments[N_INSTRUMENTS] = {
     &naiveSynth, &player
 };
-AudioConnection sampleOut;
 AudioConnection naiveSynthOut;
+AudioConnection sampleOut;
 
 // App pages
 LivePage livePage;
@@ -80,7 +80,7 @@ SequencerPage sequencerPage(&player, &samples);
 AppPage* pages[] = {&livePage, &sequencerPage};
 
 // State
-BoinxState state = {pages, 0, instruments, &sequencer, &solfagus, &joystick, &keyboard, &screen, false };
+BoinxState state = {pages, 0, instruments, &sequencer, &solfagus, &joystick, &keyboard, &screen };
 
 void setup() 
 {
@@ -152,15 +152,19 @@ void updateMatrixSequencerDisplay() {
             }
         }
         leds.setColumn(matrix, col, 0b11111111);
-        //leds.setLed(matrix, 7, col, true);
     }
 }
 
 void updateSequencerControl() {
     sequencer.update();
     if(encoder1Btn.update() && encoder1Btn.fallingEdge()) {
-        screen.message("Play/Pause");
-        sequencer.playPause();
+        if(state.alter) {
+            screen.message("Reset step");
+            sequencer.playPause();
+        } else {
+            screen.message("Play/Pause");
+            sequencer.playPause();
+        }
     }
     int encoderDelta = state.alter ? encoder1.read() : (encoder1.read() / 4);
     if(encoderDelta != 0) {
@@ -175,8 +179,10 @@ void loop()
     if(btnAlter.update()) {
         state.alter = btnAlter.fallingEdge();
     }
-    if(btn3.update() && btn3.fallingEdge()) {
-        if(state.alter) {
+    if(btn3.update()) {
+        state.change_signal = btn3.fallingEdge();
+        if(state.alter && state.change_signal) {
+            state.change_signal = false;
             state.nextPage();
             EEPROM.write(0, state.page_index);
         } else {
@@ -188,7 +194,9 @@ void loop()
 
     if(sequencer.sequence_flag) {
         Serial.println(String("Max usage : ") + AudioMemoryUsageMax());
-        Serial.println(String("Max proc : ") + AudioProcessorUsage());
+        Serial.println(String("Max proc : ") + AudioProcessorUsageMax());
+        AudioProcessorUsageMaxReset();
+        AudioMemoryUsageMaxReset();
     }
     
     state.update();
