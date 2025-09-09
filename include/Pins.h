@@ -40,7 +40,7 @@
 // BUTTONS ---------------------------------------------------------------------
 
 #define ALTER_BUTTON 36
-#define RECORD_BUTTON 37
+#define BUTTON_1 37
 #define BUTTON_2 39
 #define BUTTON_3 38
 

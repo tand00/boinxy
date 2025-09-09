@@ -10,7 +10,8 @@ void BoinxState::execute(Event e) const
 
 bool BoinxState::has_changed(const BoinxState &other) const
 {
-    return (alter != other.alter) || (page_index != other.page_index);
+    return (alter != other.alter) || 
+        (page_index != other.page_index);
 }
 
 AppPage *BoinxState::page()
@@ -22,9 +23,21 @@ void BoinxState::nextPage()
 {
     page()->leave(this);
     screen->clearPageMessage();
+
+    panel->encoder1.write(0);
+    panel->encoder2.write(0);
+    panel->encoder3.write(0);
+
     page_index = (page_index + 1) % N_PAGES;
     page()->enter(this);
     page()->markForUpdate();
+}
+
+void BoinxState::setup()
+{
+    joystick->setup();
+    keyboard->setup();
+    screen->setup(*this);
 }
 
 void BoinxState::update()

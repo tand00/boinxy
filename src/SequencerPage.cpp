@@ -54,14 +54,22 @@ void SequencerPage::update(BoinxState* state)
         markForUpdate();
     }
     if(state->keyboard->up() == JustPressed) {
-        selection_len = min(selection_len + 1, MAX_SELECTION);
-        if(selected + selection_len >= MAX_SELECTION) {
-            selected = MAX_SELECTION - selection_len;
+        if(state->alter) {
+            state->sequencer->backward();
+        } else {
+            selection_len = min(selection_len + 1, MAX_SELECTION);
+            if(selected + selection_len >= MAX_SELECTION) {
+                selected = MAX_SELECTION - selection_len;
+            }
         }
         update_led = true;
     }
     if(state->keyboard->down() == JustPressed) {
-        if(selection_len > 1) selection_len--;
+        if(state->alter) {
+            state->sequencer->forward();
+        } else if(selection_len > 1) {
+            selection_len--;
+        }
         update_led = true;
     }
     if(state->joystick->up() == JustPressed) {
@@ -91,6 +99,15 @@ void SequencerPage::update(BoinxState* state)
     }
     for(int i = 0 ; i < 8 ; i++) {
         if(state->keyboard->bottomKey(i + 1) == JustPressed) {
+            if(state->alter) {
+                if(i < 4) { // Quantization
+                    state->sequencer->setStepsPerPulse(i + 1);
+                    state->screen->message(String("Steps/p : ") + (i + 1));
+                } else { // 
+                    
+                }
+                continue;
+            }
             Event e = generateEvent();
             for(int bar = 0 ; bar < selection_len ; bar++) {
                 int step = (selected * 8) + (bar * 8) + i;

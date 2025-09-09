@@ -46,6 +46,29 @@ Key Key::basic() const
     }
 }
 
+String Key::toString() const
+{
+    const char* typeStr;
+    switch(type) {
+        case Major:
+            typeStr = "Maj";
+            break;
+        case Minor:
+            typeStr = "Min";
+            break;
+        case PentatonicMajor:
+            typeStr = "PMaj";
+            break;
+        case PentatonicMinor:
+            typeStr = "PMin";
+            break;
+        case Blues:
+            typeStr = "Blues";
+            break;
+    }
+    return String(NOTES_NAMES[tonic % 12]) + " " + typeStr;
+}
+
 void Solfagus::setKey(const Key key)
 {
     _key = key;

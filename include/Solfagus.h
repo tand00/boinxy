@@ -37,6 +37,7 @@ struct Key {
     public:
         
         Key basic() const;
+        String toString() const;
 };
 
 class Solfagus {

@@ -59,7 +59,7 @@ void Sequencer::update()
     if(_direction == Paused) return;
     unsigned long step_len = usStepLen();
     if(_elapsed >= step_len) {
-        _current_step = (_current_step + _direction * 1) % _track_len;
+        _current_step = (_current_step + _direction) % _track_len;
         _elapsed -= step_len;
         step_flag = true;
         if(_current_step == 0) sequence_flag = true;

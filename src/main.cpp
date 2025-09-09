@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include <Pins.h>
+#include <Settings.h>
 
 // Libraries
 #include <Adafruit_MCP23X17.h>
@@ -33,26 +34,33 @@
 // Pages
 #include <LivePage.h>
 #include <SequencerPage.h>
+#include <HarmonicaPage.h>
 
 // USB MIDI
 USBHost usb_host;
 MIDIDevice midi_in(usb_host);
 
-// Electronic inputs
+// Electronic drivers
 LedControl leds(MATRIX_DATA, MATRIX_CLK, MATRIX_CS, MATRIX_COUNT);
 Adafruit_MCP23X17 mcp;
+
+// Inputs managed by global logic
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
-Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
-Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
-Encoder encoder4(ENCODER_4_A, ENCODER_4_B);
 Bounce encoder1Btn(ENCODER_1_S, 10);
-Bounce encoder2Btn(ENCODER_2_S, 10);
-Bounce encoder3Btn(ENCODER_3_S, 10);
-Bounce encoder4Btn(ENCODER_4_S, 10);
 Bounce btnAlter(ALTER_BUTTON, 10);
-Bounce btnRecord(RECORD_BUTTON, 10);
-Bounce btn2(BUTTON_2, 10);
-Bounce btn3(BUTTON_3, 10);
+Bounce btnChange(BUTTON_3, 10);
+
+// Inputs with page-specific behavior
+FrontPanel panel {
+    Encoder(ENCODER_2_A, ENCODER_2_B),
+    Bounce(ENCODER_2_S, 10),
+    Encoder(ENCODER_3_A, ENCODER_3_B),
+    Bounce(ENCODER_3_S, 10),
+    Encoder(ENCODER_4_A, ENCODER_4_B),
+    Bounce(ENCODER_4_S, 10),
+    Bounce(BUTTON_1, 10),
+    Bounce(BUTTON_2, 10)
+};
 
 // Interfaces
 Sequencer sequencer;
@@ -77,10 +85,20 @@ AudioConnection sampleOut;
 // App pages
 LivePage livePage;
 SequencerPage sequencerPage(&player, &samples);
-AppPage* pages[] = {&livePage, &sequencerPage};
+HarmonicaPage harmonicaPage;
+AppPage* pages[N_PAGES] = {&livePage, &sequencerPage, &harmonicaPage};
 
 // State
-BoinxState state = {pages, 0, instruments, &sequencer, &solfagus, &joystick, &keyboard, &screen };
+BoinxState state = {
+    pages, 0, 
+    instruments, 
+    &sequencer, 
+    &solfagus, 
+    &joystick, 
+    &keyboard, 
+    &screen, 
+    &panel 
+};
 
 void setup() 
 {
@@ -88,9 +106,7 @@ void setup()
     Serial.begin(BAUDRATE);
     Serial.println("[BOINX]");
     Serial.println("Initializing...");
-    keyboard.setup();
-    screen.setup(state);
-    joystick.setup();
+    state.setup();
     samples.setup();
     for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
         leds.shutdown(i, false);
@@ -104,14 +120,14 @@ void setup()
     pinMode(ENCODER_3_S, INPUT_PULLUP);
     pinMode(ENCODER_4_S, INPUT_PULLUP);
     pinMode(ALTER_BUTTON, INPUT_PULLUP);
-    pinMode(RECORD_BUTTON, INPUT_PULLUP);
+    pinMode(BUTTON_1, INPUT_PULLUP);
     pinMode(BUTTON_2, INPUT_PULLUP);
     pinMode(BUTTON_3, INPUT_PULLUP);
 
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, HIGH);
 
-    state.page_index = (EEPROM.read(0) % N_PAGES);
+    state.page_index = (EEPROM.read(SETTING_PAGE) % N_PAGES);
     state.page()->enter(&state);
 
     Serial.println("Boinx is ready to rock !");
@@ -131,6 +147,7 @@ void updateMatrixSequencerDisplay() {
         int col = 7 - (step % 8);
         for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
             leds.clearDisplay(i);
+            // Disabled because caused sound interferences
             // leds.setIntensity(i, sequencer.pulse_flag ? 4 : 0);
         }
         if(state.page_index == SEQUENCER_PAGE_I) {
@@ -179,14 +196,13 @@ void loop()
     if(btnAlter.update()) {
         state.alter = btnAlter.fallingEdge();
     }
-    if(btn3.update()) {
-        state.change_signal = btn3.fallingEdge();
+    state.change_signal = false;
+    if(btnChange.update()) {
+        state.change_signal = btnChange.fallingEdge();
         if(state.alter && state.change_signal) {
             state.change_signal = false;
             state.nextPage();
-            EEPROM.write(0, state.page_index);
-        } else {
-            // TODO
+            EEPROM.write(SETTING_PAGE, state.page_index);
         }
     }
     updateSequencerControl();

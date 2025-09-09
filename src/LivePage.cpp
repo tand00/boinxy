@@ -40,7 +40,8 @@ void LivePage::toggleRecord()
 void LivePage::display(BoinxState *state)
 {
     state->screen->pageMessage(
-        String("Instrument :\n") + state->instruments[_instrument]->getName()
+        // String("Instrument :\n") + 
+        state->instruments[_instrument]->getName()
     );
 }
 

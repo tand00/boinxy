@@ -9,6 +9,9 @@
 #include <JoyStick.h>
 #include <Keyboard.h>
 
+#include <Encoder.h>
+#include <Bounce.h>
+
 // INSTRUMENTS CONSTANTS
 #define N_INSTRUMENTS 2
 
@@ -16,13 +19,25 @@
 #define SAMPLE_PLAYER_I 1
 
 // PAGES CONSTANTS
-#define N_PAGES 2
+#define N_PAGES 3
 
 #define LIVE_PAGE_I 0
 #define SEQUENCER_PAGE_I 1
+#define HARMONICA_PAGE_I 2
 
 class Screen;
 class AppPage;
+
+struct FrontPanel {
+    Encoder encoder1;
+    Bounce encoder1Btn;
+    Encoder encoder2;
+    Bounce encoder2Btn;
+    Encoder encoder3;
+    Bounce encoder3Btn;
+    Bounce button2;
+    Bounce button3;
+};
 
 struct BoinxState {
     AppPage** pages;
@@ -33,6 +48,7 @@ struct BoinxState {
     JoyStick* joystick;
     Keyboard* keyboard;
     Screen* screen;
+    FrontPanel* panel;
     bool alter = false;
     bool change_signal = false;
 
@@ -42,6 +58,7 @@ struct BoinxState {
     AppPage* page();
     void nextPage();
 
+    void setup();
     void update();
 };
 
