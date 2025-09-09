@@ -13,8 +13,7 @@ SamplePlayer::SamplePlayer()
 void SamplePlayer::playSample(int i)
 {
     if(_n_samples <= i) return;
-    const char* filename = getActionName(i);
-    playSample(filename);
+    playSample(getActionName(i).c_str());
 }
 
 void SamplePlayer::playSample(const String &path)
@@ -47,13 +46,14 @@ const char* SamplePlayer::getName() const
     return "Sampler";
 }
 
-const char* SamplePlayer::getActionName(int i) const
+const String SamplePlayer::getActionName(int i) const
 {
-    return _samples[i % _n_samples].c_str();
+    return _samples[i % _n_samples];
 }
 
 void SamplePlayer::registerSample(String path)
 {
+    if(_n_samples == MAX_SAMPLES) return;
     _samples[_n_samples] = path;
     _n_samples = (_n_samples + 1) % MAX_SAMPLES;
 }

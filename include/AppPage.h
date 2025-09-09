@@ -12,6 +12,15 @@ class AppPage {
         virtual void enter(BoinxState* state) {};
         virtual void update(BoinxState* state) = 0;
         virtual void leave(BoinxState* state) {};
+        virtual void display(BoinxState* state) {};
+        
+        void checkDisplayUpdate(BoinxState* state);
+
+        void markForUpdate();
+
+    protected:
+
+        bool _updateDisplay = true;
 
 };
 

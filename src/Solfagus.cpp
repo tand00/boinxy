@@ -1,4 +1,4 @@
-#include "Solfagus.h"
+#include <Solfagus.h>
 
 PROGMEM const int8_t MAJOR_STEPS[] = { 0, 2, 4, 5, 7, 9, 11 };
 PROGMEM const int8_t MINOR_STEPS[] = { 0, 2, 3, 5, 7, 8, 10 };
@@ -164,12 +164,9 @@ double Solfagus::noteFrequency(int8_t note)
     return NOTES_TUNING_4[base] * mult;
 }
 
-char *Solfagus::noteName(int8_t note)
+String Solfagus::noteName(int8_t note)
 {
     int8_t octave = note / 12;
     int8_t base = note % 12;
-
-    char octaveStr[2];
-    sprintf(octaveStr, "%d", octave);
-    
+    return String(NOTES_NAMES[base]) + octave;
 }

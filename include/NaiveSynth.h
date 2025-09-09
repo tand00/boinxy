@@ -12,7 +12,7 @@ class NaiveSynth : public Instrument {
 
         void onEvent(Event ev) override;
         const char* getName() const override; 
-        const char* getActionName(int i) const override;
+        const String getActionName(int i) const override;
 
         AudioStream& getOutput() override;
 

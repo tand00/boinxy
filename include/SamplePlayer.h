@@ -19,7 +19,7 @@ class SamplePlayer : public Instrument {
 
         void onEvent(Event ev) override;
         const char* getName() const override; 
-        const char* getActionName(int i) const override;
+        const String getActionName(int i) const override;
 
         void registerSample(String path);
         void registerSampleAt(String path, uint8_t i);

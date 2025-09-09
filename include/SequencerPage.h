@@ -21,7 +21,7 @@ class SequencerPage : public AppPage {
 
         void update(BoinxState* state) override;
 
-        void displaySample(BoinxState* state);
+        void display(BoinxState* state) override;
 
         Event generateEvent();
 

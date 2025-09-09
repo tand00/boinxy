@@ -14,7 +14,6 @@ const char *SequencerPage::name() const
 
 void SequencerPage::enter(BoinxState *state)
 {
-    displaySample(state);
     update_led = true;
 }
 
@@ -26,22 +25,21 @@ void SequencerPage::leave(BoinxState *state)
 void SequencerPage::update(BoinxState* state)
 {
     update_led = false;
-    bool update = false;
     if(state->keyboard->topKey(0) == JustPressed) {
         _samples->previousCategory();
-        update = true;
+        markForUpdate();
     }
     if(state->keyboard->topKey(1) == JustPressed) {
         _samples->nextCategory();
-        update = true;
+        markForUpdate();
     }
     if(state->keyboard->topKey(2) == JustPressed) {
         _samples->previousSample();
-        update = true;
+        markForUpdate();
     }
     if(state->keyboard->topKey(4) == JustPressed) {
         _samples->nextSample();
-        update = true;
+        markForUpdate();
     }
     if(state->keyboard->topKey(3) == JustPressed) {
         _player->playSample(_samples->getPath());
@@ -53,7 +51,7 @@ void SequencerPage::update(BoinxState* state)
             _player->registerSampleAt(_samples->getPath(), channel);
         }
         state->screen->message(String("Registered channel " + channel));
-        update = true;
+        markForUpdate();
     }
     if(state->keyboard->up() == JustPressed) {
         selection_len = min(selection_len + 1, MAX_SELECTION);
@@ -67,14 +65,14 @@ void SequencerPage::update(BoinxState* state)
         update_led = true;
     }
     if(state->joystick->up() == JustPressed) {
-        channel = min(channel + 1, _player->channels());
+        channel = min(min(channel + 1, _player->channels()), MAX_SAMPLES - 1);
         update_led = true;
-        update = true;
+        markForUpdate();
     }
     if(state->joystick->down() == JustPressed) {
         if(channel > 0) channel--;
         update_led = true;
-        update = true;
+        markForUpdate();
     }
     if(state->joystick->left() == JustPressed) {
         if(selected > 0) selected--;
@@ -101,12 +99,9 @@ void SequencerPage::update(BoinxState* state)
             update_led = true;
         }
     }
-    if(update) {
-        displaySample(state);
-    }
 }
 
-void SequencerPage::displaySample(BoinxState *state)
+void SequencerPage::display(BoinxState *state)
 {
     state->screen->pageMessage(
         String(_samples->getCategory()->name()) + "\n" 

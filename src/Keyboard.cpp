@@ -3,7 +3,6 @@
 #define BUTTON_UP 0
 #define BUTTON_DOWN 1
 
-PROGMEM const uint8_t PIANO_KEYS[] = { 0, 3, 5, 6, 7, 10 };
 PROGMEM const uint8_t PINS[KEYBOARD_SIZE] = { 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15 };
 PROGMEM const uint8_t BOTTOM_KEYS[9] = {0, 1, 3, 5, 6, 8, 10, 12, 13};
 PROGMEM const uint8_t TOP_KEYS[5] = {2, 4, 7, 9, 11};

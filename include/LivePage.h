@@ -1,7 +1,7 @@
 #ifndef LIVE_PAGE_H
 #define LIVE_PAGE_H
 
-#include "AppPage.h"
+#include <AppPage.h>
 
 class LivePage : public AppPage {
 
@@ -9,13 +9,11 @@ class LivePage : public AppPage {
 
         const char* name() const override;
 
-        void enter(BoinxState* state) override;
         void update(BoinxState* state) override;
-        void leave(BoinxState* state) override;
         
         void toggleRecord();
 
-        void displayPage(BoinxState* state);
+        void display(BoinxState* state) override;
 
         int noteIndex(const int i) const;
 

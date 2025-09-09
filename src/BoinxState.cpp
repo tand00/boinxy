@@ -3,7 +3,7 @@
 #include <Screen.h>
 #include <AppPage.h>
 
-void BoinxState::execute(Event e) const 
+void BoinxState::execute(Event e) const
 {
     instruments[e.instrument]->onEvent(e);
 }
@@ -24,6 +24,7 @@ void BoinxState::nextPage()
     screen->clearPageMessage();
     page_index = (page_index + 1) % N_PAGES;
     page()->enter(this);
+    page()->markForUpdate();
 }
 
 void BoinxState::update()
@@ -31,6 +32,7 @@ void BoinxState::update()
     joystick->update();
     keyboard->update();
     page()->update(this);
+    page()->checkDisplayUpdate(this);
     screen->update(this);
 
     if(sequencer->step_flag) {

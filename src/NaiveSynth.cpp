@@ -1,4 +1,5 @@
-#include "NaiveSynth.h"
+#include <NaiveSynth.h>
+#include <Solfagus.h>
 
 NaiveSynth::NaiveSynth()
 {
@@ -15,9 +16,9 @@ const char* NaiveSynth::getName() const
     return "NaiveSynth";
 }
 
-const char* NaiveSynth::getActionName(int i) const
+const String NaiveSynth::getActionName(int i) const
 {
-    return nullptr;
+    return Solfagus::noteName(i);
 }
 
 AudioStream& NaiveSynth::getOutput()
