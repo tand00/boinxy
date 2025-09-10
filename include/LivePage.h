@@ -17,6 +17,9 @@ class LivePage : public AppPage {
 
         int noteIndex(const int i) const;
 
+        void noteOn(const int i, BoinxState* state) const;
+        void noteOff(const int i, BoinxState* state) const;
+
     private:
 
         uint8_t _instrument = 0;

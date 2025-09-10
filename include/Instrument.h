@@ -17,6 +17,11 @@ class Instrument {
         virtual void configureSetting(int setting, int value) {}
         virtual int getSettingValue(int i) const { return 0; }
 
+        void incrSetting(int i);
+        void decrSetting(int i);
+
+        virtual String logSetting(int i);
+
         virtual void update() {}
 
         virtual AudioStream& getOutput() = 0;

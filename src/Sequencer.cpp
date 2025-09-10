@@ -60,6 +60,7 @@ void Sequencer::update()
     unsigned long step_len = usStepLen();
     if(_elapsed >= step_len) {
         _current_step = (_current_step + _direction) % _track_len;
+        if(_current_step < 0) _current_step += _track_len;
         _elapsed -= step_len;
         step_flag = true;
         if(_current_step == 0) sequence_flag = true;

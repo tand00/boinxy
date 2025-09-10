@@ -9,7 +9,6 @@
 
 // GUItool: begin automatically generated code
 AudioInputI2S2           micInput;         //xy=143,397
-AudioEffectFreeverb      freeverb1;      //xy=159,57
 AudioMixer4              inputToMono;         //xy=333,435
 AudioPlayQueue           playingQueue;         //xy=450,348
 AudioMixer4              synthMixer;         //xy=455,78

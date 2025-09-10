@@ -22,14 +22,33 @@ void LivePage::update(BoinxState *state)
     }
     for(int i = 0 ; i < KEYBOARD_SIZE ; i++) {
         if(state->keyboard->pianoKey(i) == JustPressed && !state->alter) {
-            Event e { NoteOn, noteIndex(i), _instrument };
-            state->execute(e);
+            noteOn(noteIndex(i), state);
         }
         if(state->keyboard->pianoKey(i) == JustReleased && !state->alter) {
-            Event e { NoteOff, noteIndex(i), _instrument };
-            state->execute(e);
+            noteOff(noteIndex(i), state);
         }
     }
+    Encoder* encoders[3] = { 
+        &state->panel->encoder1,
+        &state->panel->encoder2,
+        &state->panel->encoder3
+    };
+    Instrument* instru = state->instruments[_instrument];
+    for(int i = 0 ; i < min(instru->getSettingsCount(), 6) ; i++) {
+        if(i < 3 && state->alter) continue;
+        if(i >= 3 && !state->alter) continue;
+        Encoder* encoder = encoders[i % 3];
+        int e_value = encoder->read() / 4;
+        if(e_value > 0) {
+            encoder->write(0);
+            instru->incrSetting(i);
+            state->screen->message(instru->logSetting(i));
+        } else if(e_value < 0) {
+            encoder->write(0);
+            instru->decrSetting(i);
+            state->screen->message(instru->logSetting(i));
+        }
+    }    
 }
 
 void LivePage::toggleRecord() 
@@ -48,4 +67,16 @@ void LivePage::display(BoinxState *state)
 int LivePage::noteIndex(const int i) const
 {
     return _octave * 12 + FIRST_KEYBOARD_NOTE + i;
+}
+
+void LivePage::noteOn(const int i, BoinxState* state) const
+{
+    Event e { NoteOn, i, _instrument };
+    state->execute(e);
+}
+
+void LivePage::noteOff(const int i, BoinxState* state) const
+{
+    Event e { NoteOff, i, _instrument };
+    state->execute(e);
 }

@@ -9,6 +9,7 @@ DrumSynth::DrumSynth()
 
 void DrumSynth::onEvent(Event e)
 {
+    if(e.type == NoteOff) return;
     double freq = Solfagus::noteFrequency(e.action);
     _drumSynth.frequency(freq);
     _drumSynth.noteOn();

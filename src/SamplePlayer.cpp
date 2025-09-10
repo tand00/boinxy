@@ -1,7 +1,5 @@
 #include <SamplePlayer.h>
 
-AudioSynthSimpleDrum drumSynth;
-
 SamplePlayer::SamplePlayer()
 {
     _patchCord1.connect(_players[0], 0, _sampleMixer, 0);

@@ -30,6 +30,7 @@
 #include <Instrument.h>
 #include <SamplePlayer.h>
 #include <NaiveSynth.h>
+#include <DrumSynth.h>
 
 // Pages
 #include <LivePage.h>
@@ -75,12 +76,14 @@ Solfagus solfagus;
 // Instruments
 SamplePlayer player;
 NaiveSynth naiveSynth;
+DrumSynth drumSynth;
 
 Instrument* instruments[N_INSTRUMENTS] = {
-    &naiveSynth, &player
+    &naiveSynth, &player, &drumSynth
 };
 AudioConnection naiveSynthOut;
 AudioConnection sampleOut;
+AudioConnection drumSynthOut;
 
 // App pages
 LivePage livePage;
@@ -99,6 +102,13 @@ BoinxState state = {
     &screen, 
     &panel 
 };
+
+void midiNoteOn(byte channel, byte note, byte velocity) {
+    livePage.noteOn(note, &state);
+}
+void midiNoteOff(byte channel, byte note, byte velocity) {
+    livePage.noteOff(note, &state);
+}
 
 void setup() 
 {
@@ -134,8 +144,13 @@ void setup()
 
     sampleOut.connect(player.getOutput(), 0, outMixer, 1);
     naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
+    drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 1);
 
-    AudioMemory(16);
+    usb_host.begin();
+    midi_in.setHandleNoteOn(midiNoteOn);
+    midi_in.setHandleNoteOff(midiNoteOff);
+
+    AudioMemory(64);
     AudioProcessorUsageMaxReset();
     AudioMemoryUsageMaxReset();
 }
@@ -177,7 +192,7 @@ void updateSequencerControl() {
     if(encoder1Btn.update() && encoder1Btn.fallingEdge()) {
         if(state.alter) {
             screen.message("Reset step");
-            sequencer.playPause();
+            sequencer.reset();
         } else {
             screen.message("Play/Pause");
             sequencer.playPause();
@@ -215,5 +230,6 @@ void loop()
         AudioMemoryUsageMaxReset();
     }
     
+    midi_in.read();
     state.update();
 }

@@ -24,7 +24,7 @@ ButtonState Button::update()
         if(!pressed(state())) _state = JustPressed;
         else _state = Pressed;
     } else {
-        if(!pressed(state())) _state = JustReleased;
+        if(pressed(state())) _state = JustReleased;
         else _state = Released;
     }
     return _state;

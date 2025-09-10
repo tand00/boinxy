@@ -48,6 +48,10 @@ void BoinxState::update()
     page()->checkDisplayUpdate(this);
     screen->update(this);
 
+    for(int i = 0 ; i < N_INSTRUMENTS ; i++) {
+        instruments[i]->update();
+    }
+
     if(sequencer->step_flag) {
         uint8_t n_events = sequencer->getEventsCount();
         Event* events = sequencer->getEvents();
