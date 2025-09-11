@@ -3,6 +3,8 @@
 
 #define MAX_SEQUENCER_STEPS 64
 #define MAX_EVENTS_PER_STEP 16
+#define MAX_RECORD_STEPS 64
+#define MAX_RECORDS 4
 
 #define DEFAULT_TEMPO 80
 
@@ -78,6 +80,10 @@ class Sequencer {
 
         Event _events[MAX_SEQUENCER_STEPS][MAX_EVENTS_PER_STEP];
         uint8_t _events_count[MAX_SEQUENCER_STEPS] = { 0 };
+
+        Event _records[MAX_RECORDS][MAX_RECORD_STEPS][MAX_EVENTS_PER_STEP];
+        uint8_t _record_events_count[MAX_RECORDS][MAX_SEQUENCER_STEPS] = { 0 };
+        int _start_steps[MAX_RECORDS] = { 0 };
         
 };
 
