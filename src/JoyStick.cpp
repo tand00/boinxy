@@ -1,9 +1,9 @@
 #include <JoyStick.h>
 
 JoyStick::JoyStick(uint8_t pin_x, uint8_t pin_y, uint8_t pin_btn) 
-    : _x_pin(pin_x)
+    : button(pin_btn, 10)
+    , _x_pin(pin_x)
     , _y_pin(pin_y)
-    , button(pin_btn, 10)
     , _btn_pin(pin_btn)
 { }
 

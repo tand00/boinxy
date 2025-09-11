@@ -1,5 +1,12 @@
 #include <Sequencer.h>
 
+Sequencer::Sequencer()
+{
+    for(int i = 0 ; i < MAX_RECORDS ; i++) {
+        _current_record_step[i] = -1;
+    }
+}
+
 int Sequencer::getTempo() const
 {
     return _tempo;
@@ -63,24 +70,53 @@ void Sequencer::update()
         if(_current_step < 0) _current_step += _track_len;
         _elapsed -= step_len;
         step_flag = true;
-        if(_current_step == 0) sequence_flag = true;
+        sequence_flag = _current_step == 0;
+        if(sequence_flag && _record_switch) {
+            _record = !_record;
+            if(_record) {   // Record started
+                _records_len[_selected_track]++;
+            } else {        // Record finished
+                
+            }
+        }
         if(_current_step % _steps_per_pulse == 0) pulse_flag = true;
     }
 }
 
 void Sequencer::toggleRecord()
 {
-    _record = !_record;
+    _record_switch = true;
 }
 
 void Sequencer::setRecord(const bool record)
 {
-    _record = record;
+    _record_switch = record;
 }
 
 bool Sequencer::isRecording() const
 {
     return _record;
+}
+
+void Sequencer::feed(Event e)
+{
+    uint8_t track = _selected_track % MAX_RECORDS;
+    int step = _current_record_step[track];
+    int index = _records_events_count[track][step];
+    if(index == MAX_EVENTS_PER_STEP) return;
+    _records[_selected_track][step][index] = e;
+    _records_events_count[track][step]++;
+}
+
+void Sequencer::setRecordTrack(uint8_t i)
+{
+    if(_record) return; // Prevent changing track during recording
+    _selected_track = i % MAX_RECORDS;
+}
+
+uint8_t Sequencer::getRecordTrack() const
+{
+    return _selected_track;
 }
 
 void Sequencer::reset()

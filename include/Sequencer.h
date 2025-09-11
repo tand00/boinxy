@@ -1,15 +1,15 @@
 #ifndef SEQUENCER_H
 #define SEQUENCER_H
 
+#include <Arduino.h>
+#include <Event.h>
+
 #define MAX_SEQUENCER_STEPS 64
 #define MAX_EVENTS_PER_STEP 16
-#define MAX_RECORD_STEPS 64
+#define MAX_RECORD_STEPS (MAX_SEQUENCER_STEPS * 4)
 #define MAX_RECORDS 4
 
 #define DEFAULT_TEMPO 80
-
-#include <Arduino.h>
-#include <Event.h>
 
 enum SeqDirection {
     Paused = 0,
@@ -20,6 +20,8 @@ enum SeqDirection {
 class Sequencer {
 
     public:
+
+        Sequencer();
     
         int getTempo() const;
         void setTempo(int tempo);
@@ -38,9 +40,14 @@ class Sequencer {
         void update();
         void reset();
 
+        /// @brief Mark recording active, will start at next sequence
         void toggleRecord();
         void setRecord(const bool record);
         bool isRecording() const;
+        void feed(Event e);
+
+        void setRecordTrack(uint8_t i);
+        uint8_t getRecordTrack() const;
 
         void playPause();
         bool isPaused() const;
@@ -75,6 +82,7 @@ class Sequencer {
         int _steps_per_pulse = 4;
 
         bool _record = false;
+        bool _record_switch = false;
 
         SeqDirection _direction = Forward;
 
@@ -82,8 +90,11 @@ class Sequencer {
         uint8_t _events_count[MAX_SEQUENCER_STEPS] = { 0 };
 
         Event _records[MAX_RECORDS][MAX_RECORD_STEPS][MAX_EVENTS_PER_STEP];
-        uint8_t _record_events_count[MAX_RECORDS][MAX_SEQUENCER_STEPS] = { 0 };
-        int _start_steps[MAX_RECORDS] = { 0 };
+        uint8_t _records_events_count[MAX_RECORDS][MAX_SEQUENCER_STEPS] = { 0 };
+        int _records_len[MAX_RECORDS] = { 0 };
+        int _current_record_step[MAX_RECORDS] = { -1 };
+        
+        uint8_t _selected_track = 0;
         
 };
 
