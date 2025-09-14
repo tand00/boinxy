@@ -9,7 +9,7 @@
 #define MAX_RECORD_STEPS (MAX_SEQUENCER_STEPS * 4)
 #define MAX_RECORDS 4
 
-#define DEFAULT_TEMPO 80
+#define DEFAULT_TEMPO 110
 
 enum SeqDirection {
     Paused = 0,

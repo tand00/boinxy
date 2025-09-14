@@ -106,6 +106,8 @@ BoinxState state = {
     &panel 
 };
 
+uint8_t volume = 100;
+
 void midiNoteOn(byte channel, byte note, byte velocity) {
     livePage.noteOn(note, &state);
 }
@@ -149,6 +151,8 @@ void setup()
     naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
     drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 1);
     synthLeadOut.connect(synthLead.getOutput(), 0, synthMixer, 2);
+
+    globalVolume.gain(volume / 100.0);
 
     usb_host.begin();
     midi_in.setHandleNoteOn(midiNoteOn);
@@ -202,11 +206,16 @@ void updateSequencerControl() {
             sequencer.playPause();
         }
     }
-    int encoderDelta = state.alter ? encoder1.read() : (encoder1.read() / 4);
-    if(encoderDelta != 0) {
+    int encoderDelta = encoder1.read() / 4;
+    if(encoderDelta != 0 && !state.alter) {
         sequencer.setTempo(sequencer.getTempo() + encoderDelta);
         encoder1.write(0);
-        screen.message(String("New tempo : ") + sequencer.getTempo());
+        screen.message(String("Tempo : ") + sequencer.getTempo());
+    } else if(encoderDelta != 0 && state.alter) {
+        volume += encoderDelta;
+        globalVolume.gain(volume / 100.0);
+        encoder1.write(0);
+        screen.message(String("Volume : ") + volume);
     }
 }
 

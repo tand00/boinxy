@@ -31,16 +31,15 @@ class SynthwaveLead : public Instrument {
     private:
 
         int _detune = 10;
-        float _low_pass = 50;
+        float _low_pass = 100;
         int _volume = 100;
         int _sustain = 80;
-        int _n_osc = 4;
+        int _n_osc = 3;
         int8_t _note = 0;
 
         AudioSynthWaveform _osc1;
         AudioSynthWaveform _osc2;
         AudioSynthWaveform _osc3;
-        AudioSynthWaveform _osc4;
         AudioMixer4 _mixer;
         AudioEffectEnvelope _envelope;
         AudioFilterStateVariable _filter;
@@ -49,7 +48,6 @@ class SynthwaveLead : public Instrument {
         AudioConnection _osc1Out;
         AudioConnection _osc2Out;
         AudioConnection _osc3Out;
-        AudioConnection _osc4Out;
         AudioConnection _mixerOut;
         AudioConnection _envelopeOut;
         AudioConnection _filterOut;

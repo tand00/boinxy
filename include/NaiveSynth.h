@@ -45,13 +45,11 @@ class NaiveSynth : public Instrument {
         AudioMixer4 _finalMixer;
         AudioAmplifier _amp;
         AudioFilterStateVariable _filter;
-        AudioEffectFreeverb _reverb;
 
         AudioConnection _mixer1Out;
         AudioConnection _mixer2Out;
         AudioConnection _finalMixerOut;
         AudioConnection _ampOut;
-        AudioConnection _filterOut;
 
         int _voices[N_VOICES] = { -1 };
 
@@ -60,7 +58,6 @@ class NaiveSynth : public Instrument {
         short _shape = 0;
         int _volume = 100;
         int _low_pass = 50;
-        int _reverb_amount = 0.0; 
 
 };
 

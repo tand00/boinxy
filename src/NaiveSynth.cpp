@@ -18,11 +18,9 @@ NaiveSynth::NaiveSynth()
     _mixer2Out.connect(_mixer2, 0, _finalMixer, 1);
     _finalMixerOut.connect(_finalMixer, 0, _amp, 0);
     _ampOut.connect(_amp, 0, _filter, 0);
-    _filterOut.connect(_filter, 0, _reverb, 0);
     _amp.gain(_volume / 100.0);
     _filter.frequency(_low_pass * 25.0);
-    _filter.resonance(2.0);
-    _reverb.roomsize(_reverb_amount);
+    _filter.resonance(0.707);
 }
 
 void NaiveSynth::onEvent(Event ev)
@@ -57,7 +55,7 @@ const String NaiveSynth::getActionName(int i) const
 
 AudioStream& NaiveSynth::getOutput()
 {
-    return _reverb;
+    return _filter;
 }
 
 int NaiveSynth::getSettingsCount() const
@@ -74,8 +72,6 @@ const char *NaiveSynth::getSettingName(int i) const
             return "volume";
         case 2:
             return "filter";
-        case 3:
-            return "reverb";
     }
     return "unknown";
 }
@@ -95,9 +91,6 @@ void NaiveSynth::configureSetting(int setting, int value)
     } else if(setting == 2) {
         _low_pass = min(max(0, value), 200);
         _filter.frequency(_low_pass * 25.0);
-    } else if(setting == 3) {
-        _reverb_amount = min(max(0, value), 100);
-        _reverb.roomsize(_reverb_amount / 100.0);
     }
 }
 
@@ -109,9 +102,7 @@ int NaiveSynth::getSettingValue(int i) const
         return _volume;
     } else if(i == 2) {
         return _low_pass;
-    } else if(i == 3) {
-        return _reverb_amount;
-    } 
+    }
     return 0;
 }
 
