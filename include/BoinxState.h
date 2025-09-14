@@ -13,11 +13,12 @@
 #include <Bounce.h>
 
 // INSTRUMENTS CONSTANTS
-#define N_INSTRUMENTS 3
+#define N_INSTRUMENTS 4
 
 #define NAIVE_SYNTH_I 0
 #define SAMPLE_PLAYER_I 1
 #define DRUM_SYNTH_I 2
+#define SYNTHWAVE_LEAD_I 3
 
 // PAGES CONSTANTS
 #define N_PAGES 3

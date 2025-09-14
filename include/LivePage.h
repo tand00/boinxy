@@ -25,6 +25,7 @@ class LivePage : public AppPage {
         uint8_t _instrument = 0;
         int _octave = 4;
         bool _record = false;
+        uint8_t _settings_offset = 0;
         
 };
 

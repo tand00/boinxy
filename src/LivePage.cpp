@@ -28,25 +28,32 @@ void LivePage::update(BoinxState *state)
             noteOff(noteIndex(i), state);
         }
     }
+    for(int i = 1 ; i < 5 ; i ++) {
+        if(state->keyboard->bottomKey(i) == JustPressed && state->alter) {
+            _settings_offset = i - 1;
+            state->screen->message(String("Settings page ") + i);
+        }
+    } 
     Encoder* encoders[3] = { 
         &state->panel->encoder1,
         &state->panel->encoder2,
         &state->panel->encoder3
     };
     Instrument* instru = state->instruments[_instrument];
-    for(int i = 0 ; i < min(instru->getSettingsCount(), 6) ; i++) {
+    int offset = _settings_offset * 6;
+    for(int i = 0 ; i < min(instru->getSettingsCount() - offset, 6) ; i++) {
         if(i < 3 && state->alter) continue;
         if(i >= 3 && !state->alter) continue;
         Encoder* encoder = encoders[i % 3];
         int e_value = encoder->read() / 4;
         if(e_value > 0) {
             encoder->write(0);
-            instru->incrSetting(i);
-            state->screen->message(instru->logSetting(i));
+            instru->incrSetting(offset + i);
+            state->screen->message(instru->logSetting(offset + i));
         } else if(e_value < 0) {
             encoder->write(0);
-            instru->decrSetting(i);
-            state->screen->message(instru->logSetting(i));
+            instru->decrSetting(offset + i);
+            state->screen->message(instru->logSetting(offset + i));
         }
     }    
 }

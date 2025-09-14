@@ -35,7 +35,7 @@ class NaiveSynth : public Instrument {
         int voiceIndex(const int note) const;
         int findFreeIndex(const int note) const;
 
-        short mappedShape() const { return _shape; }
+        short mappedShape() const;
 
         AudioSynthWaveform _waves[N_VOICES];
         AudioEffectEnvelope _envelopes[N_VOICES];
@@ -43,15 +43,15 @@ class NaiveSynth : public Instrument {
         AudioMixer4 _mixer1;
         AudioMixer4 _mixer2;
         AudioMixer4 _finalMixer;
-        AudioFilterBiquad _filter;
-        AudioEffectFreeverb _reverb;
         AudioAmplifier _amp;
+        AudioFilterStateVariable _filter;
+        AudioEffectFreeverb _reverb;
 
         AudioConnection _mixer1Out;
         AudioConnection _mixer2Out;
         AudioConnection _finalMixerOut;
+        AudioConnection _ampOut;
         AudioConnection _filterOut;
-        AudioConnection _reverbOut;
 
         int _voices[N_VOICES] = { -1 };
 

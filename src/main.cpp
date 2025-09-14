@@ -31,6 +31,7 @@
 #include <SamplePlayer.h>
 #include <NaiveSynth.h>
 #include <DrumSynth.h>
+#include <SynthwaveLead.h>
 
 // Pages
 #include <LivePage.h>
@@ -77,13 +78,15 @@ Solfagus solfagus;
 SamplePlayer player;
 NaiveSynth naiveSynth;
 DrumSynth drumSynth;
+SynthwaveLead synthLead;
 
 Instrument* instruments[N_INSTRUMENTS] = {
-    &naiveSynth, &player, &drumSynth
+    &naiveSynth, &player, &drumSynth, &synthLead
 };
 AudioConnection naiveSynthOut;
 AudioConnection sampleOut;
 AudioConnection drumSynthOut;
+AudioConnection synthLeadOut;
 
 // App pages
 LivePage livePage;
@@ -145,6 +148,7 @@ void setup()
     sampleOut.connect(player.getOutput(), 0, outMixer, 1);
     naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
     drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 1);
+    synthLeadOut.connect(synthLead.getOutput(), 0, synthMixer, 2);
 
     usb_host.begin();
     midi_in.setHandleNoteOn(midiNoteOn);

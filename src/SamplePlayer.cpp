@@ -24,12 +24,12 @@ void SamplePlayer::playSample(const char *path)
     if(strlen(path) == 0) return;
     uint8_t selected = _player_index;
     _player_index = (_player_index + 1) % N_PLAYERS;
-    for(int i = 0 ; i < N_PLAYERS ; i++) {
-        if(_players[selected].isPlaying()) {
-            selected = _player_index;
-            _player_index = (_player_index + 1) % N_PLAYERS;
-        }
-    }
+    // for(int i = 0 ; i < N_PLAYERS ; i++) {
+    //     if(_players[selected].isPlaying()) {
+    //         selected = _player_index;
+    //         _player_index = (_player_index + 1) % N_PLAYERS;
+    //     }
+    // }
     _players[selected].play(path);
 }
 

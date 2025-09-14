@@ -16,11 +16,12 @@ NaiveSynth::NaiveSynth()
     }
     _mixer1Out.connect(_mixer1, 0, _finalMixer, 0);
     _mixer2Out.connect(_mixer2, 0, _finalMixer, 1);
-    _finalMixerOut.connect(_finalMixer, 0, _filter, 0);
-    _filterOut.connect(_filter, _reverb);
-    _reverbOut.connect(_reverb, _amp);
+    _finalMixerOut.connect(_finalMixer, 0, _amp, 0);
+    _ampOut.connect(_amp, 0, _filter, 0);
+    _filterOut.connect(_filter, 0, _reverb, 0);
     _amp.gain(_volume / 100.0);
-    _filter.setLowpass(0, _low_pass * 50.0);
+    _filter.frequency(_low_pass * 25.0);
+    _filter.resonance(2.0);
     _reverb.roomsize(_reverb_amount);
 }
 
@@ -56,7 +57,7 @@ const String NaiveSynth::getActionName(int i) const
 
 AudioStream& NaiveSynth::getOutput()
 {
-    return _amp;
+    return _reverb;
 }
 
 int NaiveSynth::getSettingsCount() const
@@ -82,7 +83,7 @@ const char *NaiveSynth::getSettingName(int i) const
 void NaiveSynth::configureSetting(int setting, int value)
 {
     if(setting == 0) {
-        _shape = min(max(0, value), 3);
+        _shape = min(max(0, value), 4);
         AudioNoInterrupts();
         for(int i = 0 ; i < N_VOICES ; i++) {
             _waves[i].begin(mappedShape());
@@ -92,8 +93,8 @@ void NaiveSynth::configureSetting(int setting, int value)
         _volume = min(max(0, value), 200);
         _amp.gain(_volume / 100.0);
     } else if(setting == 2) {
-        _low_pass = min(max(0, value), 100);
-        _filter.setLowpass(0, _low_pass * 50.0);
+        _low_pass = min(max(0, value), 200);
+        _filter.frequency(_low_pass * 25.0);
     } else if(setting == 3) {
         _reverb_amount = min(max(0, value), 100);
         _reverb.roomsize(_reverb_amount / 100.0);
@@ -149,9 +150,14 @@ String NaiveSynth::logSetting(int i)
             case 3:
                 str += "tri";
                 break;
+            case 4:
+                str += "sawR";
+                break;
         }
         return str;
-    } 
+    } else if(i == 2) {
+        return String("Filter : ") + (_low_pass * 25.0) + "Hz";
+    }
     return Instrument::logSetting(i);
 }
 
@@ -173,4 +179,10 @@ int NaiveSynth::findFreeIndex(const int note) const
         }
     }
     return -1;
+}
+
+short NaiveSynth::mappedShape() const
+{
+    if(_shape == 4) return 6;
+    return _shape;
 }
