@@ -44,7 +44,14 @@ const String SynthwaveLead::getActionName(int i) const
 
 String SynthwaveLead::logSetting(int i)
 {
-    return Instrument::logSetting(i);
+    switch(i) {
+    case 1:
+        return String("Detune : ") + (_detune / 2000.0);
+    case 2:
+        return String("Filter : ") + (_low_pass * 25.0) + "Hz";
+    default:
+        return Instrument::logSetting(i);
+    }    
 }
 
 void SynthwaveLead::update()
@@ -60,7 +67,7 @@ void SynthwaveLead::setNote(int8_t note)
 {
     float freq = Solfagus::noteFrequency(note);
     _note = note;
-    float det = _detune / 1000.0;
+    float det = _detune / 2000.0;
     AudioNoInterrupts();
     _osc1.frequency(freq);
     _osc2.frequency(freq * (1 + det));
@@ -76,16 +83,16 @@ int SynthwaveLead::getSettingsCount() const
 const char *SynthwaveLead::getSettingName(int i) const
 {
     switch(i) {
-        case 0:
-            return "volume";
-        case 1:
-            return "detune";
-        case 2:
-            return "filter";
-        case 3:
-            return "sustain";
-        case 4:
-            return "n osc";
+    case 0:
+        return "volume";
+    case 1:
+        return "detune";
+    case 2:
+        return "filter";
+    case 3:
+        return "sustain";
+    case 4:
+        return "n osc";
     }
     return "unknown";
 }

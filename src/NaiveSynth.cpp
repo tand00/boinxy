@@ -66,14 +66,15 @@ int NaiveSynth::getSettingsCount() const
 const char *NaiveSynth::getSettingName(int i) const
 {
     switch(i) {
-        case 0:
-            return "shape";
-        case 1:
-            return "volume";
-        case 2:
-            return "filter";
+    case 0:
+        return "shape";
+    case 1:
+        return "volume";
+    case 2:
+        return "filter";
+    default:
+        return "unknown";
     }
-    return "unknown";
 }
 
 void NaiveSynth::configureSetting(int setting, int value)
@@ -96,14 +97,16 @@ void NaiveSynth::configureSetting(int setting, int value)
 
 int NaiveSynth::getSettingValue(int i) const
 {
-    if(i == 0) {
+    switch(i){
+    case 0:
         return _shape;
-    } else if(i == 1) {
+    case 1:
         return _volume;
-    } else if(i == 2) {
+    case 2:
         return _low_pass;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 void NaiveSynth::update()
@@ -126,30 +129,33 @@ void NaiveSynth::update()
 
 String NaiveSynth::logSetting(int i)
 {
-    if(i == 0) {
-        String str("shape : ");
+    String str;
+    switch(i) {
+    case 0:
+        str = "Shape : ";
         switch(_shape) {
-            case 0:
-                str += "sin";
-                break;
-            case 1:
-                str += "saw";
-                break;
-            case 2:
-                str += "sq";
-                break;
-            case 3:
-                str += "tri";
-                break;
-            case 4:
-                str += "sawR";
-                break;
+        case 0:
+            str += "sin";
+            break;
+        case 1:
+            str += "saw";
+            break;
+        case 2:
+            str += "sq";
+            break;
+        case 3:
+            str += "tri";
+            break;
+        case 4:
+            str += "sawR";
+            break;
         }
         return str;
-    } else if(i == 2) {
+    case 2:
         return String("Filter : ") + (_low_pass * 25.0) + "Hz";
+    default:
+        return Instrument::logSetting(i);
     }
-    return Instrument::logSetting(i);
 }
 
 int NaiveSynth::voiceIndex(const int note) const
