@@ -80,7 +80,7 @@ const char *NaiveSynth::getSettingName(int i) const
 void NaiveSynth::configureSetting(int setting, int value)
 {
     if(setting == 0) {
-        _shape = min(max(0, value), 4);
+        _shape = min(max(0, value), 3);
         AudioNoInterrupts();
         for(int i = 0 ; i < N_VOICES ; i++) {
             _waves[i].begin(mappedShape());
@@ -146,9 +146,6 @@ String NaiveSynth::logSetting(int i)
         case 3:
             str += "tri";
             break;
-        case 4:
-            str += "sawR";
-            break;
         }
         return str;
     case 2:
@@ -180,6 +177,5 @@ int NaiveSynth::findFreeIndex(const int note) const
 
 short NaiveSynth::mappedShape() const
 {
-    if(_shape == 4) return 6;
     return _shape;
 }
