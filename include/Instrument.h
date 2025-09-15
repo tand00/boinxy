@@ -17,6 +17,9 @@ class Instrument {
         virtual void configureSetting(int setting, int value) {}
         virtual int getSettingValue(int i) const { return 0; }
 
+        virtual void analogInputX(float value) {}
+        virtual void analogInputY(float value) {}
+
         void incrSetting(int i);
         void decrSetting(int i);
 

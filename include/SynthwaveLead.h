@@ -20,6 +20,8 @@ class SynthwaveLead : public Instrument {
         void configureSetting(int setting, int value) override;
         int getSettingValue(int i) const override;
 
+        void analogInputY(float y) override;
+
         String logSetting(int i) override;
 
         void update() override;
