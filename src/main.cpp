@@ -109,10 +109,10 @@ BoinxState state = {
 uint8_t volume = 100;
 
 void midiNoteOn(byte channel, byte note, byte velocity) {
-    livePage.noteOn(note, &state);
+    state.execute(Event { NoteOn, note, channel });
 }
 void midiNoteOff(byte channel, byte note, byte velocity) {
-    livePage.noteOff(note, &state);
+    state.execute(Event { NoteOff, note, channel });
 }
 
 void setup() 
@@ -166,16 +166,17 @@ void setup()
 void updateMatrixSequencerDisplay() {
     if(sequencer.step_flag || sequencerPage.update_led) {
         int step = sequencer.getCurrentStep();
-        int matrix = step / 8;
+        int devices = leds.getDeviceCount();
+        int page = step / (devices * 8);
+        int matrix = (step % (devices * 8)) / 8;
         int col = 7 - (step % 8);
         for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
             leds.clearDisplay(i);
-            // Disabled because caused sound interferences
-            // leds.setIntensity(i, sequencer.pulse_flag ? 4 : 0);
         }
         if(state.page_index == SEQUENCER_PAGE_I) {
+            page = sequencerPage.selected / devices;
             for(int i = 0 ; i < sequencerPage.selection_len ; i++) {
-                leds.setRow(i + sequencerPage.selected, sequencerPage.channel, 0b11111111);
+                leds.setRow(i + (sequencerPage.selected % devices), sequencerPage.channel, 0b11111111);
             }
         }
         for(int e_step = 0 ; e_step < sequencer.getTrackLen() ; e_step++) {
@@ -195,7 +196,7 @@ void updateMatrixSequencerDisplay() {
     }
 }
 
-void updateSequencerControl() {
+void updateGlobalControl() {
     sequencer.update();
     if(encoder1Btn.update() && encoder1Btn.fallingEdge()) {
         if(state.alter) {
@@ -233,7 +234,7 @@ void loop()
             EEPROM.write(SETTING_PAGE, state.page_index);
         }
     }
-    updateSequencerControl();
+    updateGlobalControl();
     updateMatrixSequencerDisplay();
 
     if(sequencer.sequence_flag) {
