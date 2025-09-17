@@ -46,7 +46,7 @@ String SynthwaveLead::logSetting(int i)
 {
     switch(i) {
     case 1:
-        return String("Detune : ") + (_detune / 2000.0);
+        return String("Detune : ") + (_detune / 20.0);
     case 2:
         return String("Filter : ") + (_low_pass * 25.0) + "Hz";
     default:
