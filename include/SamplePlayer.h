@@ -5,7 +5,7 @@
 #include <Instrument.h>
 
 #define N_PLAYERS 4
-#define MAX_SAMPLES 8
+#define MAX_SAMPLES 7
 
 class SamplePlayer : public Instrument {
 

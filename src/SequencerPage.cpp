@@ -57,20 +57,15 @@ void SequencerPage::update(BoinxState* state)
         if(state->alter) {
             state->sequencer->backward();
         } else {
-            selection_len = min(selection_len + 1, MAX_SELECTION);
-            if(selected + selection_len >= MAX_SELECTION) {
-                selected = MAX_SELECTION - selection_len;
-            }
+            incrSelectionLen();
         }
-        update_led = true;
     }
     if(state->keyboard->down() == JustPressed) {
         if(state->alter) {
             state->sequencer->forward();
-        } else if(selection_len > 1) {
-            selection_len--;
-        }
-        update_led = true;
+        } else {
+            decrSelectionLen();
+        }    
     }
     if(state->joystick->up() == JustPressed) {
         channel = min(min(channel + 1, _player->channels()), MAX_SAMPLES - 1);
@@ -83,12 +78,10 @@ void SequencerPage::update(BoinxState* state)
         markForUpdate();
     }
     if(state->joystick->left() == JustPressed) {
-        if(selected > 0) selected--;
-        update_led = true;
+        decrSelection();
     }
     if(state->joystick->right() == JustPressed) {
-        selected = min(selected + 1, MAX_SELECTION - selection_len);
-        update_led = true;
+        incrSelection();
     }
     if(state->keyboard->bottomKey(0) == JustPressed) {
         Event e = generateEvent();
@@ -130,4 +123,36 @@ void SequencerPage::display(BoinxState *state)
 Event SequencerPage::generateEvent()
 {
     return Event { Pulse, channel, SAMPLE_PLAYER_I };
+}
+
+void SequencerPage::incrSelectionLen()
+{
+    selection_len = min(selection_len + 1, MAX_SELECTION);
+    if((selected % MAX_SELECTION) + selection_len >= MAX_SELECTION) {
+        //TODO: removed selected = MAX_SELECTION - selection_len;
+        selected--;
+    }
+    update_led = true;
+}
+
+void SequencerPage::decrSelectionLen()
+{
+    if(selection_len > 1) {
+        selection_len--;
+        update_led = true;
+    }
+}
+
+void SequencerPage::incrSelection()
+{
+    selected = min(selected + 1, MAX_SELECTION - selection_len);
+    update_led = true;
+}
+
+void SequencerPage::decrSelection()
+{
+    if(selected > 0) {
+        selected--;
+        update_led = true;
+    }
 }

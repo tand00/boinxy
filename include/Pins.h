@@ -44,25 +44,6 @@
 #define BUTTON_2 39
 #define BUTTON_3 38
 
-// MCP -------------------------------------------------------------------------
-
-#define KEYBOARD_KEY_1 1
-#define KEYBOARD_KEY_2 1
-#define KEYBOARD_KEY_3 1
-#define KEYBOARD_KEY_4 1
-#define KEYBOARD_KEY_5 1
-#define KEYBOARD_KEY_6 1
-#define KEYBOARD_KEY_7 1
-#define KEYBOARD_KEY_8 1
-#define KEYBOARD_KEY_9 1
-#define KEYBOARD_KEY_10 1
-#define KEYBOARD_KEY_11 1
-#define KEYBOARD_KEY_12 1
-#define KEYBOARD_KEY_13 1
-#define KEYBOARD_KEY_14 1
-#define KEYBOARD_OCT_UP 1
-#define KEYBOARD_OCT_DOWN 1
-
 // -----------------------------------------------------------------------------
 
 #endif

@@ -1,11 +1,7 @@
 #include <Sequencer.h>
 
 Sequencer::Sequencer()
-{
-    for(int i = 0 ; i < MAX_RECORDS ; i++) {
-        _current_record_step[i] = -1;
-    }
-}
+{ }
 
 int Sequencer::getTempo() const
 {
@@ -74,7 +70,7 @@ void Sequencer::update()
         if(sequence_flag && _record_switch) {
             _record = !_record;
             if(_record) {   // Record started
-                _records_len[_selected_track]++;
+                
             } else {        // Record finished
                 
             }
@@ -98,25 +94,9 @@ bool Sequencer::isRecording() const
     return _record;
 }
 
-void Sequencer::feed(Event e)
+void Sequencer::feed(Event& e)
 {
-    uint8_t track = _selected_track % MAX_RECORDS;
-    int step = _current_record_step[track];
-    int index = _records_events_count[track][step];
-    if(index == MAX_EVENTS_PER_STEP) return;
-    _records[_selected_track][step][index] = e;
-    _records_events_count[track][step]++;
-}
-
-void Sequencer::setRecordTrack(uint8_t i)
-{
-    if(_record) return; // Prevent changing track during recording
-    _selected_track = i % MAX_RECORDS;
-}
-
-uint8_t Sequencer::getRecordTrack() const
-{
-    return _selected_track;
+    if(_record) addEvent(e);
 }
 
 void Sequencer::reset()
@@ -161,10 +141,16 @@ SeqDirection Sequencer::getDirection() const
     return _direction;
 }
 
-unsigned long Sequencer::usStepLen()
+unsigned long Sequencer::usStepLen() const
 {
     double beat_duration = (60.0 / ((double) _tempo * _steps_per_pulse)) * 1.0E6;
     return beat_duration;
+}
+
+unsigned long Sequencer::usPulseLen() const
+{
+    double pulse_duration = (60.0 / ((double) _tempo)) * 1.0E6;
+    return pulse_duration;
 }
 
 int Sequencer::eventIndex(int step, const Event &e) const
@@ -175,6 +161,11 @@ int Sequencer::eventIndex(int step, const Event &e) const
         }
     }
     return -1;
+}
+
+void Sequencer::addEvent(Event e)
+{
+    addEvent(getCurrentStep(), e);
 }
 
 void Sequencer::addEvent(int step, Event e)
@@ -222,6 +213,13 @@ void Sequencer::toggleEvent(int step, Event e)
         _events_count[step]++;
     }
     
+}
+
+void Sequencer::purgeInstrumentEvents(int instrument)
+{
+    for(int step = 0 ; step < _track_len ; step++) {
+        
+    }
 }
 
 Event *Sequencer::getEvents(int step)

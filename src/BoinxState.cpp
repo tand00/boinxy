@@ -5,7 +5,7 @@
 
 void BoinxState::execute(Event e) const
 {
-    if(e.instrument >= N_INSTRUMENTS) return;
+    if(e.instrument >= N_INSTRUMENTS || e.action == ACTION_NONE) return;
     instruments[e.instrument]->onEvent(e);
 }
 

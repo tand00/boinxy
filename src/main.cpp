@@ -185,7 +185,8 @@ void updateMatrixSequencerDisplay() {
             for(uint8_t e_i = 0 ; e_i < n_events ; e_i++) {
                 if(
                     events[e_i].instrument == SAMPLE_PLAYER_I &&
-                    events[e_i].type == Pulse
+                    events[e_i].type == Pulse &&
+                    events[e_i].action != ACTION_NONE
                 ) {
                     int led = events[e_i].action;
                     leds.setLed(e_step / 8, led, 7 - (e_step % 8), true);

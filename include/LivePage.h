@@ -3,6 +3,8 @@
 
 #include <AppPage.h>
 
+#define DEFAULT_LIVE_PAGE_OCTAVE 4
+
 class LivePage : public AppPage {
 
     public:
@@ -23,7 +25,7 @@ class LivePage : public AppPage {
     private:
 
         uint8_t _instrument = 0;
-        int _octave = 4;
+        int _octave = DEFAULT_LIVE_PAGE_OCTAVE;
         bool _record = false;
         uint8_t _settings_offset = 0;
         

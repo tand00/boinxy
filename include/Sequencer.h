@@ -4,12 +4,12 @@
 #include <Arduino.h>
 #include <Event.h>
 
-#define MAX_SEQUENCER_STEPS 64
-#define MAX_EVENTS_PER_STEP 16
-#define MAX_RECORD_STEPS (MAX_SEQUENCER_STEPS * 4)
-#define MAX_RECORDS 4
+#define MAX_SEQUENCER_STEPS 128
+#define MAX_EVENTS_PER_STEP 32
 
 #define DEFAULT_TEMPO 110
+#define DEFAULT_TRACK_LEN 32
+#define DEFAULT_STEP_PER_PULSE 4
 
 enum SeqDirection {
     Paused = 0,
@@ -44,10 +44,7 @@ class Sequencer {
         void toggleRecord();
         void setRecord(const bool record);
         bool isRecording() const;
-        void feed(Event e);
-
-        void setRecordTrack(uint8_t i);
-        uint8_t getRecordTrack() const;
+        void feed(Event& e);
 
         void playPause();
         bool isPaused() const;
@@ -56,12 +53,15 @@ class Sequencer {
         void forward();
         SeqDirection getDirection() const;
 
-        unsigned long usStepLen();
+        unsigned long usStepLen() const;
+        unsigned long usPulseLen() const;
 
         int eventIndex(int step, const Event& e) const;
+        void addEvent(Event e);
         void addEvent(int step, Event e);
         void removeEvent(int step, const Event& e);
         void toggleEvent(int step, Event e);
+        void purgeInstrumentEvents(int instrument);
         uint8_t getEventsCount(int step) const;
         uint8_t getEventsCount() const;
         Event* getEvents(int step);
@@ -74,12 +74,12 @@ class Sequencer {
     private:
 
         int _tempo = DEFAULT_TEMPO;
-        int _track_len = 32;
+        int _track_len = DEFAULT_TRACK_LEN;
         int _current_step = 0;
         elapsedMicros _elapsed = 0;
         int _date_backup = 0;
 
-        int _steps_per_pulse = 4;
+        int _steps_per_pulse = DEFAULT_STEP_PER_PULSE;
 
         bool _record = false;
         bool _record_switch = false;
@@ -88,13 +88,6 @@ class Sequencer {
 
         Event _events[MAX_SEQUENCER_STEPS][MAX_EVENTS_PER_STEP];
         uint8_t _events_count[MAX_SEQUENCER_STEPS] = { 0 };
-
-        Event _records[MAX_RECORDS][MAX_RECORD_STEPS][MAX_EVENTS_PER_STEP];
-        uint8_t _records_events_count[MAX_RECORDS][MAX_SEQUENCER_STEPS] = { 0 };
-        int _records_len[MAX_RECORDS] = { 0 };
-        int _current_record_step[MAX_RECORDS] = { -1 };
-        
-        uint8_t _selected_track = 0;
         
 };
 

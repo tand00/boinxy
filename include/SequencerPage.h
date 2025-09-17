@@ -32,6 +32,11 @@ class SequencerPage : public AppPage {
 
     private:
 
+        void incrSelectionLen();
+        void decrSelectionLen();
+        void incrSelection();
+        void decrSelection();
+
         SamplePlayer* _player;
         SampleLibrary* _samples;
         Event _event = { Pulse, 0, 0 };

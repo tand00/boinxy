@@ -16,22 +16,27 @@ class SampleLibrary {
 
         void nextCategory();
         void previousCategory();
-        uint16_t categoryIndex();
+        uint16_t categoryIndex() const;
 
         void nextSample();
         void previousSample();
-        uint16_t sampleIndex();
+        uint16_t sampleIndex() const;
+
+        uint32_t globalIndex() const;
 
         File* getCategory();
         File* getSample();
 
         String getPath();
 
+        String getSampleAt(const uint32_t i);
+        String getSampleAt(const uint16_t cat_i, const uint16_t sample_i);
+
     private:
 
         uint16_t countDirectory(File& dir);
         void openCategory();
-        File openFileN(File& dir, uint16_t n);
+        File openFileN(File& dir, const uint16_t n);
 
         File _root;
         File _category;

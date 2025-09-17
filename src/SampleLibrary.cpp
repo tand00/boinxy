@@ -54,7 +54,7 @@ void SampleLibrary::previousCategory()
     AudioInterrupts();
 }
 
-uint16_t SampleLibrary::categoryIndex()
+uint16_t SampleLibrary::categoryIndex() const
 {
     return _category_index;
 }
@@ -82,9 +82,16 @@ void SampleLibrary::previousSample()
     AudioInterrupts();
 }
 
-uint16_t SampleLibrary::sampleIndex()
+uint16_t SampleLibrary::sampleIndex() const
 {
     return _sample_index;
+}
+
+uint32_t SampleLibrary::globalIndex() const
+{
+    uint32_t index = _category_index;
+    index <<= 16;
+    index |= _sample_index;
 }
 
 File *SampleLibrary::getCategory()
@@ -100,6 +107,20 @@ File *SampleLibrary::getSample()
 String SampleLibrary::getPath()
 {
     return String(SAMPLES_PATH) + "/" + _category.name() + "/" + _sample.name();
+}
+
+String SampleLibrary::getSampleAt(const uint32_t i)
+{
+    uint16_t sample_i = i & 0xFF;
+    uint16_t cat_i = (i >> 16) & 0xFF;
+    return getSampleAt(cat_i, sample_i);
+}
+
+String SampleLibrary::getSampleAt(const uint16_t cat_i, const uint16_t sample_i)
+{
+    File category = openFileN(_root, cat_i);
+    File sample = openFileN(category, sample_i);
+    return String(SAMPLES_PATH) + "/" + category.name() + "/" + sample.name();
 }
 
 uint16_t SampleLibrary::countDirectory(File &dir)
@@ -125,7 +146,7 @@ void SampleLibrary::openCategory()
     _sample_index = 0;
 }
 
-File SampleLibrary::openFileN(File &dir, uint16_t n)
+File SampleLibrary::openFileN(File &dir, const uint16_t n)
 {
     dir.rewindDirectory();
     File entry = dir.openNextFile();
