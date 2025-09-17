@@ -5,6 +5,7 @@
 
 void BoinxState::execute(Event e) const
 {
+    if(e.instrument >= N_INSTRUMENTS) return;
     instruments[e.instrument]->onEvent(e);
 }
 
