@@ -55,12 +55,13 @@ void LivePage::update(BoinxState *state)
             instru->decrSetting(offset + i);
             state->screen->message(instru->logSetting(offset + i));
         }
-    }    
-}
-
-void LivePage::toggleRecord() 
-{
-    _record = !_record;
+    }
+    if(state->panel->button2.fallingEdge()) {
+        state->sequencer->toggleRecord();
+    }
+    if(state->alter && state->keyboard->bottomKey(0) == JustPressed) {
+        state->sequencer->purgeInstrument(_instrument);
+    }
 }
 
 void LivePage::display(BoinxState *state)
@@ -80,10 +81,12 @@ void LivePage::noteOn(const int i, BoinxState* state) const
 {
     Event e { NoteOn, i, _instrument };
     state->execute(e);
+    state->sequencer->feed(e);
 }
 
 void LivePage::noteOff(const int i, BoinxState* state) const
 {
     Event e { NoteOff, i, _instrument };
     state->execute(e);
+    state->sequencer->feed(e);
 }

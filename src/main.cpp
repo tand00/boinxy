@@ -31,7 +31,7 @@
 #include <SamplePlayer.h>
 #include <NaiveSynth.h>
 #include <DrumSynth.h>
-#include <SynthwaveLead.h>
+#include <SynthwavePoly.h>
 
 // Pages
 #include <LivePage.h>
@@ -75,18 +75,18 @@ SampleLibrary samples;
 Solfagus solfagus;
 
 // Instruments
-SamplePlayer player;
 NaiveSynth naiveSynth;
+SynthwavePoly synthPoly;
 DrumSynth drumSynth;
-SynthwaveLead synthLead;
+SamplePlayer player;
 
 Instrument* instruments[N_INSTRUMENTS] = {
-    &naiveSynth, &player, &drumSynth, &synthLead
+    &naiveSynth, &synthPoly, &drumSynth, &player
 };
 AudioConnection naiveSynthOut;
-AudioConnection sampleOut;
+AudioConnection synthPolyOut;
 AudioConnection drumSynthOut;
-AudioConnection synthLeadOut;
+AudioConnection sampleOut;
 
 // App pages
 LivePage livePage;
@@ -109,10 +109,14 @@ BoinxState state = {
 uint8_t volume = 100;
 
 void midiNoteOn(byte channel, byte note, byte velocity) {
-    state.execute(Event { NoteOn, note, channel });
+    Event e { NoteOn, note, channel };
+    state.execute(e);
+    sequencer.feed(e);
 }
 void midiNoteOff(byte channel, byte note, byte velocity) {
-    state.execute(Event { NoteOff, note, channel });
+    Event e { NoteOff, note, channel };
+    state.execute(e);
+    sequencer.feed(e);
 }
 
 void setup() 
@@ -144,13 +148,11 @@ void setup()
 
     state.page_index = (EEPROM.read(SETTING_PAGE) % N_PAGES);
     state.page()->enter(&state);
-
-    Serial.println("Boinx is ready to rock !");
-
-    sampleOut.connect(player.getOutput(), 0, outMixer, 1);
+    
     naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
-    drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 1);
-    synthLeadOut.connect(synthLead.getOutput(), 0, synthMixer, 2);
+    synthPolyOut.connect(synthPoly.getOutput(), 0, synthMixer, 1);
+    drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 2);
+    sampleOut.connect(player.getOutput(), 0, outMixer, 1);
 
     globalVolume.gain(volume / 100.0);
 
@@ -161,6 +163,8 @@ void setup()
     AudioMemory(64);
     AudioProcessorUsageMaxReset();
     AudioMemoryUsageMaxReset();
+
+    Serial.println("Boinx is ready to rock !");
 }
 
 void updateMatrixSequencerDisplay() {
@@ -168,6 +172,7 @@ void updateMatrixSequencerDisplay() {
         int step = sequencer.getCurrentStep();
         int devices = leds.getDeviceCount();
         int page = step / (devices * 8);
+        int step_page = page;
         int matrix = (step % (devices * 8)) / 8;
         int col = 7 - (step % 8);
         for(int i = 0 ; i < leds.getDeviceCount() ; i++) {
@@ -179,21 +184,23 @@ void updateMatrixSequencerDisplay() {
                 leds.setRow(i + (sequencerPage.selected % devices), sequencerPage.channel, 0b11111111);
             }
         }
-        for(int e_step = 0 ; e_step < sequencer.getTrackLen() ; e_step++) {
-            uint8_t n_events = sequencer.getEventsCount(e_step);
+        int start_step = page * devices * 8;
+        int end_step = min(sequencer.getTrackLen(), start_step + devices * 8);
+        for(int e_step = start_step ; e_step < end_step ; e_step++) {
             Event* events = sequencer.getEvents(e_step);
-            for(uint8_t e_i = 0 ; e_i < n_events ; e_i++) {
+            for(uint8_t e_i = 0 ; e_i < MAX_EVENTS_PER_STEP ; e_i++) {
                 if(
                     events[e_i].instrument == SAMPLE_PLAYER_I &&
                     events[e_i].type == Pulse &&
                     events[e_i].action != ACTION_NONE
                 ) {
                     int led = events[e_i].action;
-                    leds.setLed(e_step / 8, led, 7 - (e_step % 8), true);
+                    leds.setLed((e_step % (devices * 8)) / 8, led, 7 - (e_step % 8), true);
                 }
             }
         }
-        leds.setColumn(matrix, col, 0b11111111);
+        if(page == step_page) leds.setColumn(matrix, col, 0b11111110);
+        leds.setLed(0, 7, 7 - page, true);
     }
 }
 

@@ -48,7 +48,7 @@ Key Key::basic() const
 
 String Key::toString() const
 {
-    const char* typeStr;
+    const char* typeStr = "";
     switch(type) {
         case Major:
             typeStr = "Maj";
@@ -64,6 +64,9 @@ String Key::toString() const
             break;
         case Blues:
             typeStr = "Blues";
+            break;
+        case Chromatic:
+            typeStr = "Chromatic";
             break;
     }
     return String(NOTES_NAMES[tonic % 12]) + " " + typeStr;

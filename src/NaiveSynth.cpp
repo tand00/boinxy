@@ -3,14 +3,17 @@
 
 NaiveSynth::NaiveSynth()
 {
-    for(int i = 0 ; i < N_VOICES ; i++) {
+    for(int i = 0 ; i < N_NAIVE_VOICES ; i++) {
         _waves[i].begin(1.0, 440.0, mappedShape());
         _voices[i] = -1;
+        _waves[i].pulseWidth(_duty / 100.0);
         _connections[i].connect(_waves[i], _envelopes[i]);
         if(i < 4) {
-            _connections[N_VOICES + i].connect(_envelopes[i], 0, _mixer1, i);
+            _connections[N_NAIVE_VOICES + i].connect(_envelopes[i], 0, _mixer1, i);
+            _mixer1.gain(i, 1.0 / 6.0);
         } else {
-            _connections[N_VOICES + i].connect(_envelopes[i], 0, _mixer2, i % 4);
+            _connections[N_NAIVE_VOICES + i].connect(_envelopes[i], 0, _mixer2, i % 4);
+            _mixer2.gain(i % 4, 1.0 / 6.0);
         }
         
     }
@@ -72,6 +75,8 @@ const char *NaiveSynth::getSettingName(int i) const
         return "volume";
     case 2:
         return "filter";
+    case 3:
+        return "duty";
     default:
         return "unknown";
     }
@@ -82,7 +87,7 @@ void NaiveSynth::configureSetting(int setting, int value)
     if(setting == 0) {
         _shape = min(max(0, value), 3);
         AudioNoInterrupts();
-        for(int i = 0 ; i < N_VOICES ; i++) {
+        for(int i = 0 ; i < N_NAIVE_VOICES ; i++) {
             _waves[i].begin(mappedShape());
         }
         AudioInterrupts();
@@ -92,6 +97,13 @@ void NaiveSynth::configureSetting(int setting, int value)
     } else if(setting == 2) {
         _low_pass = min(max(0, value), 200);
         _filter.frequency(_low_pass * 25.0);
+    } else if(setting == 3) {
+        _duty = min(max(0, value), 100);
+        AudioNoInterrupts();
+        for(int i = 0 ; i < N_NAIVE_VOICES ; i++) {
+            _waves[i].pulseWidth(_duty / 100.0);
+        }
+        AudioInterrupts();
     }
 }
 
@@ -104,6 +116,8 @@ int NaiveSynth::getSettingValue(int i) const
         return _volume;
     case 2:
         return _low_pass;
+    case 3:
+        return _duty;
     default:
         return 0;
     }
@@ -112,11 +126,12 @@ int NaiveSynth::getSettingValue(int i) const
 void NaiveSynth::update()
 {
     int count = 0;
-    for(int i = 0 ; i < N_VOICES ; i++) {
+    for(int i = 0 ; i < N_NAIVE_VOICES ; i++) {
         if(_envelopes[i].isActive()) count++;
     }
     if(count != _active_voices) {
         _active_voices = count;
+        if(_active_voices < 6) return; 
         AudioNoInterrupts();
         for(int i = 0 ; i < 4 ; i++) {
             _mixer1.gain(i, 
@@ -157,7 +172,7 @@ String NaiveSynth::logSetting(int i)
 
 int NaiveSynth::voiceIndex(const int note) const
 {
-    for(int i = 0 ; i < N_VOICES ; i++) {
+    for(int i = 0 ; i < N_NAIVE_VOICES ; i++) {
         if(_voices[i] == note) {
             return i;
         }
@@ -167,7 +182,7 @@ int NaiveSynth::voiceIndex(const int note) const
 
 int NaiveSynth::findFreeIndex(const int note) const
 {
-    for(int i = 0 ; i < N_VOICES ; i++) {
+    for(int i = 0 ; i < N_NAIVE_VOICES ; i++) {
         if(_voices[i] == -1) {
             return i;
         }
@@ -177,5 +192,6 @@ int NaiveSynth::findFreeIndex(const int note) const
 
 short NaiveSynth::mappedShape() const
 {
+    if(_shape == 2) return 5; // Maps square to pulse
     return _shape;
 }

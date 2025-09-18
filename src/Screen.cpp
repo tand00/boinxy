@@ -31,6 +31,14 @@ void Screen::update(BoinxState* state)
         _update = true;
         _cache_state = *state;
     }
+    if(state->sequencer->pulse_flag) {
+        _pulseTimeout = 0;
+        _update = true;
+    }
+    if(state->sequencer->isRecording() != _recording) {
+        _recording = state->sequencer->isRecording();
+        _update = true;
+    }
     if(_update) {
         display.clearDisplay();
         buildGenericScreen();
@@ -48,6 +56,14 @@ void Screen::buildGenericScreen()
     if(_cache_state.alter) {
         display.setCursor(64, 0);
         display.print("ALT");
+    }
+    if(_pulseTimeout < PULSE_TIMEOUT) {
+        display.setCursor(96, 0);
+        display.print("P");
+    }
+    if(_recording) {
+        display.setCursor(104, 0);
+        display.print("O");
     }
     display.setCursor(0, 16);
     display.println(_msg);

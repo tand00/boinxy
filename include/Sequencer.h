@@ -8,7 +8,7 @@
 #define MAX_EVENTS_PER_STEP 32
 
 #define DEFAULT_TEMPO 110
-#define DEFAULT_TRACK_LEN 32
+#define DEFAULT_TRACK_LEN 64
 #define DEFAULT_STEP_PER_PULSE 4
 
 enum SeqDirection {
@@ -36,6 +36,8 @@ class Sequencer {
 
         int getCurrentStep() const;
         void setCurrentStep(int step, bool reset_time = true);
+
+        int getPreviousStep() const;
         
         void update();
         void reset();
@@ -61,17 +63,21 @@ class Sequencer {
         void addEvent(int step, Event e);
         void removeEvent(int step, const Event& e);
         void toggleEvent(int step, Event e);
-        void purgeInstrumentEvents(int instrument);
-        uint8_t getEventsCount(int step) const;
-        uint8_t getEventsCount() const;
+        void purgeInstrumentStep(int step, int instrument);
+        void purgeInstrument(int instrument);
+        //uint8_t getEventsCount(int step) const;
+        //uint8_t getEventsCount() const;
         Event* getEvents(int step);
         Event* getEvents();
+        Event* getPreviousEvents();
 
         bool step_flag = false;
         bool sequence_flag = false;
         bool pulse_flag = false;
 
     private:
+
+        int findFreeEventIndex(int step);
 
         int _tempo = DEFAULT_TEMPO;
         int _track_len = DEFAULT_TRACK_LEN;
@@ -82,12 +88,11 @@ class Sequencer {
         int _steps_per_pulse = DEFAULT_STEP_PER_PULSE;
 
         bool _record = false;
-        bool _record_switch = false;
 
         SeqDirection _direction = Forward;
 
         Event _events[MAX_SEQUENCER_STEPS][MAX_EVENTS_PER_STEP];
-        uint8_t _events_count[MAX_SEQUENCER_STEPS] = { 0 };
+        //uint8_t _events_count[MAX_SEQUENCER_STEPS] = { 0 };
         
 };
 

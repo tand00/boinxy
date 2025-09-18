@@ -50,7 +50,7 @@ void SequencerPage::update(BoinxState* state)
         } else {
             _player->registerSampleAt(_samples->getPath(), channel);
         }
-        state->screen->message(String("Registered channel " + channel));
+        state->screen->message(String("Registered channel ") + channel);
         markForUpdate();
     }
     if(state->keyboard->up() == JustPressed) {
@@ -96,8 +96,10 @@ void SequencerPage::update(BoinxState* state)
                 if(i < 4) { // Quantization
                     state->sequencer->setStepsPerPulse(i + 1);
                     state->screen->message(String("Steps/p : ") + (i + 1));
-                } else { // 
-                    
+                } else { // track len
+                    int track_len = 32 + (i-4) * 32;
+                    state->sequencer->setTrackLen(track_len);
+                    state->screen->message(String("Track len : ") + track_len);
                 }
                 continue;
             }
@@ -116,7 +118,7 @@ void SequencerPage::display(BoinxState *state)
     state->screen->pageMessage(
         String(_samples->getCategory()->name()) + "\n" 
         + _samples->getSample()->name() + "\n" 
-        + ((_player->channels() > channel) ? (_player->getActionName(channel)) + 9 : "")
+        + ((_player->channels() > channel) ? (_player->getActionName(channel).substring(9)) : "")
     );
 }
 
@@ -128,8 +130,7 @@ Event SequencerPage::generateEvent()
 void SequencerPage::incrSelectionLen()
 {
     selection_len = min(selection_len + 1, MAX_SELECTION);
-    if((selected % MAX_SELECTION) + selection_len >= MAX_SELECTION) {
-        //TODO: removed selected = MAX_SELECTION - selection_len;
+    if((selected % MAX_SELECTION) + selection_len > MAX_SELECTION) {
         selected--;
     }
     update_led = true;
@@ -145,7 +146,10 @@ void SequencerPage::decrSelectionLen()
 
 void SequencerPage::incrSelection()
 {
-    selected = min(selected + 1, MAX_SELECTION - selection_len);
+    selected = min(selected + 1, TOTAL_SEQUENCER_RANGE - selection_len);
+    if(selected + selection_len > (1 + selected / MAX_SELECTION) * MAX_SELECTION) {
+        selected = (1 + selected / MAX_SELECTION) * MAX_SELECTION;
+    }
     update_led = true;
 }
 
@@ -154,5 +158,8 @@ void SequencerPage::decrSelection()
     if(selected > 0) {
         selected--;
         update_led = true;
+    }
+    if((selected % MAX_SELECTION) + selection_len > MAX_SELECTION) {
+        selected = (1 + selected / MAX_SELECTION) * MAX_SELECTION - selection_len;
     }
 }

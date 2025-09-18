@@ -54,6 +54,11 @@ void Sequencer::setCurrentStep(int step, bool reset_time)
     if(reset_time) _elapsed = 0;
 }
 
+int Sequencer::getPreviousStep() const
+{
+    return (_current_step + _track_len - 1) % _track_len;
+}
+
 void Sequencer::update()
 {
     step_flag = false;
@@ -67,26 +72,18 @@ void Sequencer::update()
         _elapsed -= step_len;
         step_flag = true;
         sequence_flag = _current_step == 0;
-        if(sequence_flag && _record_switch) {
-            _record = !_record;
-            if(_record) {   // Record started
-                
-            } else {        // Record finished
-                
-            }
-        }
         if(_current_step % _steps_per_pulse == 0) pulse_flag = true;
     }
 }
 
 void Sequencer::toggleRecord()
 {
-    _record_switch = true;
+    _record = !_record;
 }
 
 void Sequencer::setRecord(const bool record)
 {
-    _record_switch = record;
+    _record = record;
 }
 
 bool Sequencer::isRecording() const
@@ -155,7 +152,7 @@ unsigned long Sequencer::usPulseLen() const
 
 int Sequencer::eventIndex(int step, const Event &e) const
 {
-    for(int i = 0 ; i < _events_count[step] ; i++) {
+    for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
         if(_events[step][i] == e) {
             return i;
         }
@@ -171,54 +168,43 @@ void Sequencer::addEvent(Event e)
 void Sequencer::addEvent(int step, Event e)
 {
     if(eventIndex(step, e) >= 0) return;
-    int n_events = getEventsCount(step);
-    if(n_events == MAX_EVENTS_PER_STEP) return;
-    _events[step][n_events] = e;
-    _events_count[step]++;
+    int index = findFreeEventIndex(step);
+    if(index == -1) return;
+    _events[step][index] = e;
 }
 
 void Sequencer::removeEvent(int step, const Event &e)
 {
     int to_remove = eventIndex(step, e);
-    int n_events = getEventsCount(step);
     if(to_remove == -1) return;
-    for(int i = to_remove ; i < n_events - 1 ; i++) {
-        _events[step][i] = _events[step][i + 1];
-    }
-    _events_count[step]--;
-}
-
-uint8_t Sequencer::getEventsCount(int step) const
-{
-    return _events_count[step];
-}
-
-uint8_t Sequencer::getEventsCount() const
-{
-    return _events_count[getCurrentStep()];
+    _events[step][to_remove].action = ACTION_NONE;
 }
 
 void Sequencer::toggleEvent(int step, Event e)
 {
     int to_remove = eventIndex(step, e);
-    int n_events = getEventsCount(step);
     if(to_remove >= 0) {
-        for(int i = to_remove ; i < n_events - 1 ; i++) {
-            _events[step][i] = _events[step][i + 1];
-        }
-        _events_count[step]--;
+        _events[step][to_remove].action = ACTION_NONE;
     } else {
-        if(n_events == MAX_EVENTS_PER_STEP) return;
-        _events[step][n_events] = e;
-        _events_count[step]++;
+        int index = findFreeEventIndex(step);
+        if(index == -1) return;
+        _events[step][index] = e;
     }
-    
 }
 
-void Sequencer::purgeInstrumentEvents(int instrument)
+void Sequencer::purgeInstrument(int instrument)
 {
     for(int step = 0 ; step < _track_len ; step++) {
-        
+        purgeInstrumentStep(step, instrument);
+    }
+}
+
+void Sequencer::purgeInstrumentStep(int step, int instrument)
+{
+    for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
+        if(_events[step][i].instrument == instrument) {
+            _events[step][i].action = ACTION_NONE;
+        }
     }
 }
 
@@ -230,4 +216,17 @@ Event *Sequencer::getEvents(int step)
 Event *Sequencer::getEvents()
 {
     return _events[getCurrentStep()];
+}
+
+Event *Sequencer::getPreviousEvents()
+{
+    return _events[getPreviousStep()];
+}
+
+int Sequencer::findFreeEventIndex(int step)
+{
+    for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
+        if(_events[step][i].action == ACTION_NONE) return i;
+    }
+    return -1;
 }

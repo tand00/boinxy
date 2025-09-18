@@ -7,6 +7,7 @@
 #include <SampleLibrary.h>
 
 #define MAX_SELECTION 4
+#define TOTAL_SEQUENCER_RANGE 16
 
 class SequencerPage : public AppPage {
 

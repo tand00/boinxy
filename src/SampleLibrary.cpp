@@ -92,6 +92,7 @@ uint32_t SampleLibrary::globalIndex() const
     uint32_t index = _category_index;
     index <<= 16;
     index |= _sample_index;
+    return index;
 }
 
 File *SampleLibrary::getCategory()

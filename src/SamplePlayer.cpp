@@ -54,6 +54,8 @@ void SamplePlayer::registerSample(String path)
     if(_n_samples == MAX_SAMPLES) return;
     _samples[_n_samples] = path;
     _n_samples = (_n_samples + 1) % MAX_SAMPLES;
+
+    //_n_samples++;
 }
 
 void SamplePlayer::registerSampleAt(String path, uint8_t i)

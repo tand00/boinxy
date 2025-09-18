@@ -6,8 +6,8 @@
 
 #include <SynthBlocks.h>
 
-#define N_VOICES 8
-#define N_VOICES_MIXERS (N_VOICES / 4) + ((N_VOICES % 4 == 0) ? 0 : 1)
+#define N_NAIVE_VOICES 8
+#define N_NAIVE_VOICES_MIXERS (N_NAIVE_VOICES / 4) + ((N_NAIVE_VOICES % 4 == 0) ? 0 : 1)
 
 class NaiveSynth : public Instrument {
 
@@ -37,9 +37,9 @@ class NaiveSynth : public Instrument {
 
         short mappedShape() const;
 
-        AudioSynthWaveform _waves[N_VOICES];
-        AudioEffectEnvelope _envelopes[N_VOICES];
-        AudioConnection _connections[N_VOICES * 2];
+        AudioSynthWaveform _waves[N_NAIVE_VOICES];
+        AudioEffectEnvelope _envelopes[N_NAIVE_VOICES];
+        AudioConnection _connections[N_NAIVE_VOICES * 2];
         AudioMixer4 _mixer1;
         AudioMixer4 _mixer2;
         AudioMixer4 _finalMixer;
@@ -51,13 +51,14 @@ class NaiveSynth : public Instrument {
         AudioConnection _finalMixerOut;
         AudioConnection _ampOut;
 
-        int _voices[N_VOICES] = { -1 };
+        int _voices[N_NAIVE_VOICES];
 
         int _active_voices = 0;
 
         short _shape = 0;
         int _volume = 100;
         int _low_pass = 50;
+        int _duty = 50;
 
 };
 

@@ -16,9 +16,9 @@
 #define N_INSTRUMENTS 4
 
 #define NAIVE_SYNTH_I 0
-#define SAMPLE_PLAYER_I 1
+#define SYNTHWAVE_POLY_I 1
 #define DRUM_SYNTH_I 2
-#define SYNTHWAVE_LEAD_I 3
+#define SAMPLE_PLAYER_I 3
 
 // PAGES CONSTANTS
 #define N_PAGES 3
@@ -39,6 +39,8 @@ struct FrontPanel {
     Bounce encoder3Btn;
     Bounce button2;
     Bounce button3;
+
+    void update();
 };
 
 struct BoinxState {

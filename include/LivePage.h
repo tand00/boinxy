@@ -12,8 +12,6 @@ class LivePage : public AppPage {
         const char* name() const override;
 
         void update(BoinxState* state) override;
-        
-        void toggleRecord();
 
         void display(BoinxState* state) override;
 
@@ -26,7 +24,6 @@ class LivePage : public AppPage {
 
         uint8_t _instrument = 0;
         int _octave = DEFAULT_LIVE_PAGE_OCTAVE;
-        bool _record = false;
         uint8_t _settings_offset = 0;
         
 };

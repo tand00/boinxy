@@ -45,6 +45,7 @@ void BoinxState::update()
 {
     joystick->update();
     keyboard->update();
+    panel->update();
     page()->update(this);
     page()->checkDisplayUpdate(this);
     screen->update(this);
@@ -54,10 +55,24 @@ void BoinxState::update()
     }
 
     if(sequencer->step_flag) {
-        uint8_t n_events = sequencer->getEventsCount();
         Event* events = sequencer->getEvents();
-        for(int i = 0 ; i < n_events ; i++) {
-            execute(events[i]);
+        Event* previous = sequencer->getPreviousEvents();
+        for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
+            if(events[i].type == Pulse || events[i].type == NoteOn) {
+                execute(events[i]);
+            }
+            if(previous[i].type == NoteOff) {
+                execute(previous[i]);
+            }
         }
     }
+}
+
+void FrontPanel::update()
+{
+    button2.update();
+    button3.update();
+    encoder1Btn.update();
+    encoder2Btn.update();
+    encoder3Btn.update();
 }
