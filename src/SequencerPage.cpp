@@ -98,16 +98,19 @@ void SequencerPage::update(BoinxState* state)
         if(state->keyboard->bottomKey(i + 1) == JustPressed) {
             if(state->alter) {
                 if(i < 4) { // Quantization
-                    state->sequencer->setStepsPerPulse(i + 1);
-                    state->screen->message(String("Steps/p : ") + (i + 1));
+                    state->sequencer->setStepsPerPulse(1 << i);
+                    state->screen->message(String("Steps/p : ") + (1 << i));
                 } else { // track len
-                    int track_len = 32 + (i-4) * 32;
+                    int track_len = (1 << (i % 4)) * 32;
                     state->sequencer->setTrackLen(track_len);
                     state->screen->message(String("Track len : ") + track_len);
                 }
                 continue;
             }
             Event e = generateEvent();
+            for(int page = 0 ; page < TOTAL_SEQUENCER_RANGE / MAX_SELECTION ; page++) {
+                
+            }
             for(int bar = 0 ; bar < selection_len ; bar++) {
                 int step = (selected * 8) + (bar * 8) + i;
                 state->sequencer->toggleEvent(step, e);
@@ -128,7 +131,7 @@ void SequencerPage::display(BoinxState *state)
 
 Event SequencerPage::generateEvent()
 {
-    return Event { Pulse, channel, SAMPLE_PLAYER_I };
+    return Event { Pulse, channel, N_INSTRUMENTS - 1 };
 }
 
 void SequencerPage::incrSelectionLen()

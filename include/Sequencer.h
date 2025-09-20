@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <Event.h>
 
-#define MAX_SEQUENCER_STEPS 128
+#define MAX_SEQUENCER_STEPS 256
 #define MAX_EVENTS_PER_STEP 32
 
 #define MAX_ACTIVE_EVENTS 128

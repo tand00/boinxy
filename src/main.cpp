@@ -106,7 +106,7 @@ BoinxState state = {
     &panel 
 };
 
-uint8_t volume = 20;
+int8_t volume = 20;
 
 void midiNoteOn(byte channel, byte note, byte velocity) {
     Event e { NoteOn, note, static_cast<uint8_t>(channel - 1) };
@@ -167,6 +167,18 @@ void setup()
     Serial.println("Boinx is ready to rock !");
 }
 
+void update_notes_leds() {
+    for(int i = 0 ; i < MAX_ACTIVE_EVENTS ; i++) {
+        Event& e = state.active_events[i];
+        if(e.isNone() || e.instrument == N_INSTRUMENTS - 1) continue;
+        int led = min(max(e.action, 60 - 24), 60 + 24 - 1) - (60 - 24);
+        led /= 2;
+        int addr = 1 + (led / 8);
+        int col = led % 8;
+        leds.setLed(addr, 7, 7 - col, true);
+    }
+}
+
 void updateMatrixSequencerDisplay() {
     if(sequencer.step_flag || sequencerPage.update_led) {
         int step = sequencer.getCurrentStep();
@@ -190,7 +202,7 @@ void updateMatrixSequencerDisplay() {
             Event* events = sequencer.getEvents(e_step);
             for(uint8_t e_i = 0 ; e_i < MAX_EVENTS_PER_STEP ; e_i++) {
                 if(
-                    events[e_i].instrument == SAMPLE_PLAYER_I &&
+                    events[e_i].instrument == (N_INSTRUMENTS - 1) &&
                     events[e_i].type == Pulse &&
                     !events[e_i].isNone()
                 ) {
@@ -201,6 +213,7 @@ void updateMatrixSequencerDisplay() {
         }
         if(page == step_page) leds.setColumn(matrix, col, 0b11111110);
         leds.setLed(0, 7, 7 - page, true);
+        update_notes_leds();
     }
 }
 
@@ -221,7 +234,7 @@ void updateGlobalControl() {
         encoder1.write(0);
         screen.message(String("Tempo : ") + sequencer.getTempo());
     } else if(encoderDelta != 0 && state.alter) {
-        volume += encoderDelta;
+        volume = min(20, max(0, volume + encoderDelta));
         globalVolume.gain(volume / 20.0);
         encoder1.write(0);
         screen.message(String("Volume : ") + (volume * 5));
