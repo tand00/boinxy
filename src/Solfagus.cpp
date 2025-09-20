@@ -82,6 +82,16 @@ Key Solfagus::getKey() const
     return _key;
 }
 
+void Solfagus::incrKey()
+{
+    _key.tonic = (_key.tonic + 1) % 12;
+}
+
+void Solfagus::decrKey()
+{
+    _key.tonic = (_key.tonic - 1) % 12;
+}
+
 void Solfagus::setKeyTonic(const int8_t tonic)
 {
     _key.tonic = tonic;
@@ -122,8 +132,8 @@ int8_t Solfagus::chordNote(const int8_t root_index, const int8_t index) const
         case Minor:
             return noteAt(root_index + index * 2);
         case PentatonicMajor:
-            return noteAtIndex(_key.basic(), root_index);
         case PentatonicMinor:
+            return noteAtIndex(_key.basic(), root_index);
         default:
             return root_index;
     }
@@ -151,7 +161,7 @@ void Solfagus::chord(int8_t notes[], uint8_t n) const
         index++;
         note = noteAt(index);
     }
-    chordAt(0, notes, n);
+    return chordAt(0, notes, n);
 }
 
 void Solfagus::majorChord(int8_t notes[], uint8_t n) const

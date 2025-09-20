@@ -24,5 +24,5 @@ void HarmonicaPage::update(BoinxState *state)
 void HarmonicaPage::display(BoinxState *state)
 {
     String key = state->solfagus->getKey().toString();
-    state->screen->pageMessage(String("Key: ") + key);
+    state->screen->pageMessage(String("Key : ") + key);
 }

@@ -89,8 +89,18 @@ void SequencerPage::update(BoinxState* state)
     }
     if(state->keyboard->bottomKey(0) == JustPressed) {
         Event e = generateEvent();
-        for(int i = 0 ; i < 8 * selection_len ; i++) {
-            state->sequencer->removeEvent(selected * 8 + i, e);
+        if(_global_mode) {
+            for(int page = 0 ; page < (TOTAL_SEQUENCER_RANGE / MAX_SELECTION) ; page++) {
+                int root = selected % MAX_SELECTION;
+                int offset = page * 8 * MAX_SELECTION;
+                for(int i = 0 ; i < 8 * selection_len ; i++) {
+                    state->sequencer->removeEvent(offset + root * 8 + i, e);
+                }
+            }
+        } else {
+            for(int i = 0 ; i < 8 * selection_len ; i++) {
+                state->sequencer->removeEvent(selected * 8 + i, e);
+            }
         }
         update_led = true;
     }
@@ -108,12 +118,20 @@ void SequencerPage::update(BoinxState* state)
                 continue;
             }
             Event e = generateEvent();
-            for(int page = 0 ; page < TOTAL_SEQUENCER_RANGE / MAX_SELECTION ; page++) {
-                
-            }
-            for(int bar = 0 ; bar < selection_len ; bar++) {
-                int step = (selected * 8) + (bar * 8) + i;
-                state->sequencer->toggleEvent(step, e);
+            if(_global_mode) {
+                for(int page = 0 ; page < (TOTAL_SEQUENCER_RANGE / MAX_SELECTION) ; page++) {
+                    int root = selected % MAX_SELECTION;
+                    int offset = page * 8 * MAX_SELECTION;
+                    for(int bar = 0 ; bar < selection_len ; bar++) {
+                        int step = offset + (root * 8) + (bar * 8) + i;
+                        state->sequencer->toggleEvent(step, e);
+                    }
+                }
+            } else {
+                for(int bar = 0 ; bar < selection_len ; bar++) {
+                    int step = (selected * 8) + (bar * 8) + i;
+                    state->sequencer->toggleEvent(step, e);
+                }
             }
             update_led = true;
         }

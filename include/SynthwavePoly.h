@@ -12,7 +12,7 @@ class SynthwavePoly : public Instrument {
 
     public:
 
-        SynthwavePoly();
+        SynthwavePoly(String name);
 
         void onEvent(Event) override;
         const char* getName() const override;
@@ -30,6 +30,8 @@ class SynthwavePoly : public Instrument {
         AudioStream& getOutput() override;
 
     private:
+
+        String _name;
 
         int voiceIndex(const int note) const;
         int findFreeIndex(const int note) const;

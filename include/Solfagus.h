@@ -47,6 +47,9 @@ class Solfagus {
         void setKey(const Key key);
         Key getKey() const;
 
+        void incrKey();
+        void decrKey();
+
         void setKeyTonic(const int8_t tonic);
         void setKeyType(const KeyType type);
 

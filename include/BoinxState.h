@@ -13,7 +13,7 @@
 #include <Bounce.h>
 
 // INSTRUMENTS CONSTANTS
-#define N_INSTRUMENTS 4
+#define N_INSTRUMENTS 5
 
 // PAGES CONSTANTS
 #define N_PAGES 3
@@ -21,6 +21,8 @@
 #define LIVE_PAGE_I 0
 #define SEQUENCER_PAGE_I 1
 #define HARMONICA_PAGE_I 2
+
+#define ENCODERS_MIN_STEPS 4
 
 class Screen;
 class AppPage;

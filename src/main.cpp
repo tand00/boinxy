@@ -76,15 +76,17 @@ Solfagus solfagus;
 
 // Instruments
 NaiveSynth naiveSynth;
-SynthwavePoly synthPoly;
+SynthwavePoly synthPoly1("SynthPoly1");
+SynthwavePoly synthPoly2("SynthPoly2");
 DrumSynth drumSynth;
 SamplePlayer player;
 
 Instrument* instruments[N_INSTRUMENTS] = {
-    &naiveSynth, &synthPoly, &drumSynth, &player
+    &naiveSynth, &synthPoly1, &synthPoly2, &drumSynth, &player
 };
 AudioConnection naiveSynthOut;
-AudioConnection synthPolyOut;
+AudioConnection synthPoly1Out;
+AudioConnection synthPoly2Out;
 AudioConnection drumSynthOut;
 AudioConnection sampleOut;
 
@@ -150,8 +152,9 @@ void setup()
     state.page()->enter(&state);
     
     naiveSynthOut.connect(naiveSynth.getOutput(), 0, synthMixer, 0);
-    synthPolyOut.connect(synthPoly.getOutput(), 0, synthMixer, 1);
-    drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 2);
+    synthPoly1Out.connect(synthPoly1.getOutput(), 0, synthMixer, 1);
+    synthPoly2Out.connect(synthPoly2.getOutput(), 0, synthMixer, 2);
+    drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 3);
     sampleOut.connect(player.getOutput(), 0, outMixer, 1);
 
     globalVolume.gain(volume / 20.0);
@@ -228,7 +231,7 @@ void updateGlobalControl() {
             sequencer.playPause();
         }
     }
-    int encoderDelta = encoder1.read() / 4;
+    int encoderDelta = encoder1.read() / ENCODERS_MIN_STEPS;
     if(encoderDelta != 0 && !state.alter) {
         sequencer.setTempo(sequencer.getTempo() + encoderDelta);
         encoder1.write(0);

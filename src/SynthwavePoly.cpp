@@ -1,6 +1,7 @@
 #include <SynthwavePoly.h>
 
-SynthwavePoly::SynthwavePoly()
+SynthwavePoly::SynthwavePoly(String name)
+    : _name(name)
 {
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
         _notes[i] = ACTION_NONE;
@@ -37,7 +38,7 @@ void SynthwavePoly::onEvent(Event ev)
 
 const char *SynthwavePoly::getName() const
 {
-    return "SynthwavePoly";
+    return _name.c_str();
 }
 
 const String SynthwavePoly::getActionName(int i) const

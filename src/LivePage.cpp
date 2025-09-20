@@ -45,7 +45,7 @@ void LivePage::update(BoinxState *state)
         if(i < 3 && state->alter) continue;
         if(i >= 3 && !state->alter) continue;
         Encoder* encoder = encoders[i % 3];
-        int e_value = encoder->read() / 4;
+        int e_value = encoder->read() / ENCODERS_MIN_STEPS;
         if(e_value > 0) {
             encoder->write(0);
             instru->incrSetting(offset + i);
