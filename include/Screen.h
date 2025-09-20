@@ -11,7 +11,6 @@
 #define SCREEN_ADDR 0x3C
 
 #define MESSAGE_TIMEOUT 2000
-#define PULSE_TIMEOUT 100
 
 class BoinxState;
 
@@ -37,7 +36,7 @@ class Screen {
     private:
 
         elapsedMillis _messageTimeout;
-        elapsedMillis _pulseTimeout = PULSE_TIMEOUT;
+        int _pulse = 1;
         bool _recording = false;
         String _msg;
         String _page_msg;

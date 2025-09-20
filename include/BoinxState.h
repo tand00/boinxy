@@ -56,7 +56,12 @@ struct BoinxState {
     bool alter = false;
     bool change_signal = false;
 
-    void execute(Event e) const;
+    Event active_events[MAX_ACTIVE_EVENTS];
+
+    void execute(Event e);
+    void flush();
+    void flushInstrument(int instru);
+
     bool has_changed(const BoinxState& other) const;
 
     AppPage* page();
@@ -64,6 +69,10 @@ struct BoinxState {
 
     void setup();
     void update();
+
+    private:
+
+        bool updateActiveEvents(Event e);
 };
 
 #endif

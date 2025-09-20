@@ -18,8 +18,9 @@ SynthwavePoly::SynthwavePoly()
 
 void SynthwavePoly::onEvent(Event ev)
 {
-    if(ev.type == Pulse || ev.action == ACTION_NONE) return;
+    if(ev.type == Pulse || ev.isNone()) return;
     if(ev.type == NoteOn) {
+        if(voiceIndex(ev.action) >= 0) return;
         int index = findFreeIndex(ev.action);
         if(index == -1) return;
         _voices[index].onEvent(ev);

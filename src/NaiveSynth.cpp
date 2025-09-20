@@ -21,15 +21,16 @@ NaiveSynth::NaiveSynth()
     _mixer2Out.connect(_mixer2, 0, _finalMixer, 1);
     _finalMixerOut.connect(_finalMixer, 0, _amp, 0);
     _ampOut.connect(_amp, 0, _filter, 0);
-    _amp.gain(_volume / 100.0);
+    _amp.gain(_volume / 20.0);
     _filter.frequency(_low_pass * 25.0);
     _filter.resonance(0.707);
 }
 
 void NaiveSynth::onEvent(Event ev)
 {
-    if(ev.type == Pulse || ev.action == ACTION_NONE) return;
+    if(ev.type == Pulse || ev.isNone()) return;
     if(ev.type == NoteOn) {
+        if(voiceIndex(ev.action) >= 0) return;
         float freq = Solfagus::noteFrequency(ev.action);
         int index = findFreeIndex(ev.action);
         if(index == -1) return;
@@ -92,8 +93,8 @@ void NaiveSynth::configureSetting(int setting, int value)
         }
         AudioInterrupts();
     } else if(setting == 1) {
-        _volume = min(max(0, value), 200);
-        _amp.gain(_volume / 100.0);
+        _volume = min(max(0, value), 40);
+        _amp.gain(_volume / 20.0);
     } else if(setting == 2) {
         _low_pass = min(max(0, value), 200);
         _filter.frequency(_low_pass * 25.0);
@@ -163,6 +164,8 @@ String NaiveSynth::logSetting(int i)
             break;
         }
         return str;
+    case 1:
+        return String("Volume : ") + (_volume * 5);
     case 2:
         return String("Filter : ") + (_low_pass * 25.0) + "Hz";
     default:

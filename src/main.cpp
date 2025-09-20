@@ -106,15 +106,15 @@ BoinxState state = {
     &panel 
 };
 
-uint8_t volume = 100;
+uint8_t volume = 20;
 
 void midiNoteOn(byte channel, byte note, byte velocity) {
-    Event e { NoteOn, note, channel };
+    Event e { NoteOn, note, static_cast<uint8_t>(channel - 1) };
     state.execute(e);
     sequencer.feed(e);
 }
 void midiNoteOff(byte channel, byte note, byte velocity) {
-    Event e { NoteOff, note, channel };
+    Event e { NoteOff, note, static_cast<uint8_t>(channel - 1) };
     state.execute(e);
     sequencer.feed(e);
 }
@@ -154,7 +154,7 @@ void setup()
     drumSynthOut.connect(drumSynth.getOutput(), 0, synthMixer, 2);
     sampleOut.connect(player.getOutput(), 0, outMixer, 1);
 
-    globalVolume.gain(volume / 100.0);
+    globalVolume.gain(volume / 20.0);
 
     usb_host.begin();
     midi_in.setHandleNoteOn(midiNoteOn);
@@ -192,7 +192,7 @@ void updateMatrixSequencerDisplay() {
                 if(
                     events[e_i].instrument == SAMPLE_PLAYER_I &&
                     events[e_i].type == Pulse &&
-                    events[e_i].action != ACTION_NONE
+                    !events[e_i].isNone()
                 ) {
                     int led = events[e_i].action;
                     leds.setLed((e_step % (devices * 8)) / 8, led, 7 - (e_step % 8), true);
@@ -222,9 +222,9 @@ void updateGlobalControl() {
         screen.message(String("Tempo : ") + sequencer.getTempo());
     } else if(encoderDelta != 0 && state.alter) {
         volume += encoderDelta;
-        globalVolume.gain(volume / 100.0);
+        globalVolume.gain(volume / 20.0);
         encoder1.write(0);
-        screen.message(String("Volume : ") + volume);
+        screen.message(String("Volume : ") + (volume * 5));
     }
 }
 

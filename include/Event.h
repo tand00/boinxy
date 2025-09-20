@@ -17,6 +17,14 @@ struct Event {
     uint8_t instrument = 0;
 
     bool operator==(const Event& other) const;
+    bool isSameAction(const Event& other) const;
+
+    bool isNone() const;
+    void nonify();
+
+    Event on() const;
+    Event off() const;
+    Event pulse() const;
 };
 
 #endif

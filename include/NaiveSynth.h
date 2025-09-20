@@ -56,7 +56,7 @@ class NaiveSynth : public Instrument {
         int _active_voices = 0;
 
         short _shape = 0;
-        int _volume = 100;
+        int _volume = 20;
         int _low_pass = 50;
         int _duty = 50;
 

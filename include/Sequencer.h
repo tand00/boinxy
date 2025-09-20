@@ -7,6 +7,8 @@
 #define MAX_SEQUENCER_STEPS 128
 #define MAX_EVENTS_PER_STEP 32
 
+#define MAX_ACTIVE_EVENTS 128
+
 #define DEFAULT_TEMPO 110
 #define DEFAULT_TRACK_LEN 64
 #define DEFAULT_STEP_PER_PULSE 4
@@ -36,6 +38,8 @@ class Sequencer {
 
         int getCurrentStep() const;
         void setCurrentStep(int step, bool reset_time = true);
+
+        int getCurrentPulse() const;
 
         int getPreviousStep() const;
         
@@ -71,13 +75,23 @@ class Sequencer {
         Event* getEvents();
         Event* getPreviousEvents();
 
+        Event* getActiveEvents();
+
         bool step_flag = false;
         bool sequence_flag = false;
         bool pulse_flag = false;
 
+        bool auto_stop_record = true;
+
     private:
 
         int findFreeEventIndex(int step);
+
+        bool updateActiveEvents(Event e);
+
+        Event _active_events[MAX_ACTIVE_EVENTS];
+
+        bool _recorded_events = false;
 
         int _tempo = DEFAULT_TEMPO;
         int _track_len = DEFAULT_TRACK_LEN;

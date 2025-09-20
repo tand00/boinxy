@@ -10,7 +10,7 @@ SynthwaveLead::SynthwaveLead()
     _envelopeOut.connect(_envelope, 0, _filter, 0);
     _filterOut.connect(_filter, 0, _amp, 0);
     
-    _amp.gain(_volume / 100.0);
+    _amp.gain(_volume / 20.0);
     _filter.resonance(0.707);
     _filter.frequency(_low_pass * 25.0);
     _envelope.sustain(_sustain / 100.0);
@@ -45,6 +45,8 @@ const String SynthwaveLead::getActionName(int i) const
 String SynthwaveLead::logSetting(int i)
 {
     switch(i) {
+    case 0:
+        return String("Volume : ") + (_volume * 5);
     case 1:
         return String("Detune : ") + (_detune / 20.0);
     case 2:
@@ -100,8 +102,8 @@ const char *SynthwaveLead::getSettingName(int i) const
 void SynthwaveLead::configureSetting(int setting, int value)
 {
     if(setting == 0) {
-        _volume = min(max(0, value), 200);
-        _amp.gain(_volume / 100.0);
+        _volume = min(max(0, value), 40);
+        _amp.gain(_volume / 20.0);
     } else if(setting == 1) {
         _detune = min(max(0, value), 100);
         setNote(_note);

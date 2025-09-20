@@ -38,6 +38,8 @@ class SequencerPage : public AppPage {
         void incrSelection();
         void decrSelection();
 
+        bool _global_mode = false;
+
         SamplePlayer* _player;
         SampleLibrary* _samples;
         Event _event = { Pulse, 0, 0 };

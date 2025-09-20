@@ -6,3 +6,40 @@ bool Event::operator==(const Event &other) const
         && (action == other.action) 
         && (instrument == other.instrument);
 }
+
+bool Event::isSameAction(const Event &other) const
+{
+    return (action == other.action)
+        && (instrument == other.instrument);
+}
+
+bool Event::isNone() const
+{
+    return action == ACTION_NONE;
+}
+
+void Event::nonify()
+{
+    action = ACTION_NONE;
+}
+
+Event Event::on() const
+{
+    Event res = *this;
+    res.type = NoteOn;
+    return res;
+}
+
+Event Event::off() const
+{
+    Event res = *this;
+    res.type = NoteOff;
+    return res;
+}
+
+Event Event::pulse() const
+{
+    Event res = *this;
+    res.type = Pulse;
+    return res;
+}

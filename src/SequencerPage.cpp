@@ -25,6 +25,10 @@ void SequencerPage::leave(BoinxState *state)
 void SequencerPage::update(BoinxState* state)
 {
     update_led = false;
+    if(state->change_signal) {
+        _global_mode = !_global_mode;
+        state->screen->message(String("Global : ") + _global_mode);
+    }
     if(state->keyboard->topKey(0) == JustPressed) {
         _samples->previousCategory();
         markForUpdate();

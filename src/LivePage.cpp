@@ -61,6 +61,7 @@ void LivePage::update(BoinxState *state)
     }
     if(state->alter && state->keyboard->bottomKey(0) == JustPressed) {
         state->sequencer->purgeInstrument(_instrument);
+        state->flushInstrument(_instrument);
     }
 }
 
