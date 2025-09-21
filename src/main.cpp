@@ -227,8 +227,8 @@ void updateGlobalControl() {
             screen.message("Reset step");
             sequencer.reset();
         } else {
-            screen.message("Play/Pause");
             sequencer.playPause();
+            screen.message(sequencer.isPaused() ? "Pause" : "Play");
         }
     }
     int encoderDelta = encoder1.read() / ENCODERS_MIN_STEPS;

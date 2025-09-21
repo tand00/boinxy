@@ -1,14 +1,16 @@
 #include <AppPage.h>
 
-void AppPage::checkDisplayUpdate(BoinxState *state)
+bool AppPage::needsScreenUpdate() const
 {
-    if(_updateDisplay) {
-        this->display(state);
-        _updateDisplay = false;
-    }
+    return _updateDisplay;
 }
 
 void AppPage::markForUpdate()
 {
     _updateDisplay = true;
+}
+
+ void AppPage::markUpdated()
+{
+    _updateDisplay = false;
 }

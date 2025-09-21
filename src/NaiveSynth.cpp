@@ -71,13 +71,13 @@ const char *NaiveSynth::getSettingName(int i) const
 {
     switch(i) {
     case 0:
-        return "shape";
+        return "Shp";
     case 1:
-        return "volume";
+        return "Vol";
     case 2:
-        return "filter";
+        return "LoP";
     case 3:
-        return "duty";
+        return "Pwm";
     default:
         return "unknown";
     }
@@ -145,10 +145,9 @@ void NaiveSynth::update()
 
 String NaiveSynth::logSetting(int i)
 {
-    String str;
+    String str = String(getSettingName(i)) + ":";
     switch(i) {
     case 0:
-        str = "Shape : ";
         switch(_shape) {
         case 0:
             str += "sin";
@@ -165,11 +164,11 @@ String NaiveSynth::logSetting(int i)
         }
         return str;
     case 1:
-        return String("Volume : ") + (_volume * 5);
+        return str + (_volume * 5);
     case 2:
-        return String("Filter : ") + (_low_pass * 25.0) + "Hz";
+        return str + (_low_pass * 25);
     default:
-        return Instrument::logSetting(i);
+        return str + getSettingValue(i);
     }
 }
 

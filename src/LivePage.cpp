@@ -49,11 +49,13 @@ void LivePage::update(BoinxState *state)
         if(e_value > 0) {
             encoder->write(0);
             instru->incrSetting(offset + i);
-            state->screen->message(instru->logSetting(offset + i));
+            markForUpdate();
+            //state->screen->message(instru->logSetting(offset + i));
         } else if(e_value < 0) {
             encoder->write(0);
             instru->decrSetting(offset + i);
-            state->screen->message(instru->logSetting(offset + i));
+            markForUpdate();
+            //state->screen->message(instru->logSetting(offset + i));
         }
     }
     if(state->panel->button2.fallingEdge()) {
@@ -67,10 +69,21 @@ void LivePage::update(BoinxState *state)
 
 void LivePage::display(BoinxState *state)
 {
-    state->screen->pageMessage(
-        // String("Instrument :\n") + 
-        state->instruments[_instrument]->getName()
-    );
+    Adafruit_SSD1306& display = state->screen->display;
+    Instrument* instru = state->instruments[_instrument];
+    int16_t x,y;
+    uint16_t w,h;
+    display.getTextBounds(instru->getName(), PAGE_START_X, PAGE_START_Y, &x, &y, &w, &h);
+    display.setCursor(64 - w / 2, PAGE_START_Y);
+    display.print(instru->getName());
+    int offset = _settings_offset * 6;
+    int bound = min(6, instru->getSettingsCount() - offset);
+    for(int i = 0 ; i < bound ; i++) {
+        int16_t row = i / 2;
+        int16_t col = i % 2;
+        display.setCursor(PAGE_START_X + col * 64, PAGE_START_Y + 12 + row * 12);
+        display.print(instru->logSetting(i));
+    }
 }
 
 int LivePage::noteIndex(const int i) const

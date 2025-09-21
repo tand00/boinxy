@@ -44,15 +44,16 @@ const String SynthwaveLead::getActionName(int i) const
 
 String SynthwaveLead::logSetting(int i)
 {
+    String str = String(getSettingName(i)) + ":";
     switch(i) {
     case 0:
-        return String("Volume : ") + (_volume * 5);
+        return str + (_volume * 5);
     case 1:
-        return String("Detune : ") + (_detune / 20.0);
+        return str + (_detune / 20.0);
     case 2:
-        return String("Filter : ") + (_low_pass * 25.0) + "Hz";
+        return str + (_low_pass * 25);
     default:
-        return Instrument::logSetting(i);
+        return str + getSettingValue(i);
     }    
 }
 
@@ -86,15 +87,15 @@ const char *SynthwaveLead::getSettingName(int i) const
 {
     switch(i) {
     case 0:
-        return "volume";
+        return "Vol";
     case 1:
-        return "detune";
+        return "Det";
     case 2:
-        return "filter";
+        return "LoP";
     case 3:
-        return "sustain";
+        return "Sus";
     case 4:
-        return "n osc";
+        return "nOs";
     }
     return "unknown";
 }

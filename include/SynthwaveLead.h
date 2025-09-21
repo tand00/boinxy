@@ -31,7 +31,7 @@ class SynthwaveLead : public Instrument {
     private:
 
         int _detune = 10;
-        float _low_pass = 100;
+        int _low_pass = 100;
         int _volume = 20;
         int _sustain = 80;
         int _n_osc = 3;

@@ -14,9 +14,10 @@ class AppPage {
         virtual void leave(BoinxState* state) {};
         virtual void display(BoinxState* state) {};
         
-        void checkDisplayUpdate(BoinxState* state);
+        bool needsScreenUpdate() const;
 
         void markForUpdate();
+        void markUpdated();
 
     protected:
 

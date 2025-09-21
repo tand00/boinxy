@@ -17,5 +17,5 @@ void Instrument::decrSetting(int i)
 
 String Instrument::logSetting(int i)
 {
-    return String(getSettingName(i)) + " : " + getSettingValue(i);
+    return String(getSettingName(i)) + ":" + getSettingValue(i);
 }

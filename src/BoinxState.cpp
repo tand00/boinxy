@@ -71,7 +71,6 @@ void BoinxState::update()
     keyboard->update();
     panel->update();
     page()->update(this);
-    page()->checkDisplayUpdate(this);
     screen->update(this);
 
     for(int i = 0 ; i < N_INSTRUMENTS ; i++) {

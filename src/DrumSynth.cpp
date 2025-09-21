@@ -34,11 +34,11 @@ const char *DrumSynth::getSettingName(int i) const
 {
     switch(i) {
         case 0:
-            return "length";
+            return "Len";
         case 1:
-            return "secondMix";
+            return "Scd";
         case 2:
-            return "pitchMod";
+            return "PtM";
         default:
             return "unknown";
     }
