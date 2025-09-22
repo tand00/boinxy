@@ -34,6 +34,11 @@ ButtonState JoyStick::right() const
     return _right;
 }
 
+bool JoyStick::isReleased() const
+{
+    return !pressed(_up) && !pressed(_down) && !pressed(_left) && !pressed(_right);
+}
+
 void JoyStick::update()
 {
     button.update();

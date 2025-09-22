@@ -21,6 +21,8 @@ class JoyStick {
         ButtonState left() const;
         ButtonState right() const;
 
+        bool isReleased() const;
+
         void update();
 
         float xPosition() const;

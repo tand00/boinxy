@@ -8,11 +8,14 @@ SynthwaveLead::SynthwaveLead()
     _osc3Out.connect(_osc3, 0, _mixer, 2);
     _mixerOut.connect(_mixer, 0, _envelope, 0);
     _envelopeOut.connect(_envelope, 0, _filter, 0);
-    _filterOut.connect(_filter, 0, _amp, 0);
+    _filterOut.connect(_filter, 0, _crusher, 0);
+    _crusherOut.connect(_crusher, 0, _amp, 0);
     
     _amp.gain(_volume / 20.0);
     _filter.resonance(0.707);
     _filter.frequency(_low_pass * 25.0);
+    _crusher.bits(_crusher_bits);
+    _crusher.sampleRate(_crusher_freq * 441);
     _envelope.sustain(_sustain / 100.0);
     _osc1.begin(0.25, 440.0, WAVEFORM_SAWTOOTH);
     _osc2.begin(0.25, 440.0, WAVEFORM_SAWTOOTH);
@@ -52,6 +55,8 @@ String SynthwaveLead::logSetting(int i)
         return str + (_detune / 20.0);
     case 2:
         return str + (_low_pass * 25);
+    case 6:
+        return str + (_crusher_freq * 441);
     default:
         return str + getSettingValue(i);
     }    
@@ -80,7 +85,7 @@ void SynthwaveLead::setNote(int8_t note)
 
 int SynthwaveLead::getSettingsCount() const
 {
-    return 5;
+    return 7;
 }
 
 const char *SynthwaveLead::getSettingName(int i) const
@@ -96,6 +101,10 @@ const char *SynthwaveLead::getSettingName(int i) const
         return "Sus";
     case 4:
         return "nOs";
+    case 5:
+        return "crB";
+    case 6:
+        return "crF";
     }
     return "unknown";
 }
@@ -125,6 +134,12 @@ void SynthwaveLead::configureSetting(int setting, int value)
         _osc2.amplitude(1.0 / _n_osc);
         _osc3.amplitude(1.0 / _n_osc);
         AudioInterrupts();
+    } else if(setting == 5) {
+        _crusher_bits = min(max(1, value), 16);
+        _crusher.bits(_crusher_bits);
+    } else if(setting == 6) {
+        _crusher_freq = min(max(1, value), 100);
+        _crusher.sampleRate(_crusher_freq * 441);
     } 
 }
 
@@ -141,6 +156,10 @@ int SynthwaveLead::getSettingValue(int i) const
         return _sustain;
     case 4:
         return _n_osc;
+    case 5:
+        return _crusher_bits;
+    case 6:
+        return _crusher_freq;
     default:
         return 0;
     }

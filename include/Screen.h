@@ -10,7 +10,7 @@
 #define OLED_RESET -1
 #define SCREEN_ADDR 0x3C
 
-#define MESSAGE_TIMEOUT 1000
+#define MESSAGE_TIMEOUT 500
 
 #define PAGE_START_X 0
 #define PAGE_START_Y 16

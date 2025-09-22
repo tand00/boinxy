@@ -35,6 +35,9 @@ class SynthwaveLead : public Instrument {
         int _volume = 20;
         int _sustain = 80;
         int _n_osc = 3;
+        int _crusher_bits = 16;
+        int _crusher_freq = 100;
+
         int8_t _note = 0;
 
         AudioSynthWaveform _osc1;
@@ -43,6 +46,7 @@ class SynthwaveLead : public Instrument {
         AudioMixer4 _mixer;
         AudioEffectEnvelope _envelope;
         AudioFilterStateVariable _filter;
+        AudioEffectBitcrusher _crusher;
         AudioAmplifier _amp;
 
         AudioConnection _osc1Out;
@@ -51,6 +55,7 @@ class SynthwaveLead : public Instrument {
         AudioConnection _mixerOut;
         AudioConnection _envelopeOut;
         AudioConnection _filterOut;
+        AudioConnection _crusherOut;
 
 };
 

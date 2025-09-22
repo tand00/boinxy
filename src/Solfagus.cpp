@@ -29,13 +29,18 @@ PROGMEM const double NOTES_TUNING_4[] = {
 const char* NOTES_NAMES[] = {
     "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
 };
+const char* MAJOR_SCALE_CHORDS[] = {
+    "Maj", "m", "m", "Maj", "Maj", "m", "dim"
+};
+const char* MINOR_SCALE_CHORDS[] = {
+    "Maj", "m", "m", "Maj", "Maj", "m", "dim"
+};
 
 Key Key::basic() const
 {
     switch(type) {
         case Major:
         case PentatonicMajor:
-        case Chromatic:
             return { tonic, Major };
         case Minor:
         case PentatonicMinor:
@@ -54,7 +59,7 @@ String Key::toString() const
             typeStr = "Maj";
             break;
         case Minor:
-            typeStr = "Min";
+            typeStr = "min";
             break;
         case PentatonicMajor:
             typeStr = "PMaj";
@@ -64,9 +69,6 @@ String Key::toString() const
             break;
         case Blues:
             typeStr = "Blues";
-            break;
-        case Chromatic:
-            typeStr = "Chromatic";
             break;
     }
     return String(NOTES_NAMES[tonic % 12]) + " " + typeStr;
@@ -105,8 +107,6 @@ void Solfagus::setKeyType(const KeyType type)
 int8_t Solfagus::noteAtIndex(const Key& scale, const int8_t index)
 {
     switch(scale.type) {
-        case Chromatic:
-            return scale.tonic + index;
         case Major:
             return scale.tonic + MAJOR_STEPS[index % 7] + 12 * (index / 7);
         case Minor:
@@ -139,30 +139,44 @@ int8_t Solfagus::chordNote(const int8_t root_index, const int8_t index) const
     }
 }
 
-void Solfagus::chordAt(const int8_t root_index, int8_t notes[], uint8_t n) const
+void Solfagus::chordAt(const int8_t root_index, int8_t notes[], int8_t octave, uint8_t n) const
 {
-    for(int i = 1 ; i < n ; i++) {
-        notes[i] = chordNote(root_index, i);
+    for(int i = 0 ; i < n ; i++) {
+        notes[i] = 12 * octave + chordNote(root_index, i);
     }
 }
 
-void Solfagus::chord(int8_t notes[], uint8_t n) const
+String Solfagus::chordName(const int8_t root_index) const
 {
-    const int8_t root = notes[0] % 12;
-    const int8_t octave = notes[0] / 12;
-
-    int8_t index = 0;
-    int8_t note = _key.tonic;
-    while(note != _key.tonic || index == 0) {
-        if(note % 12 == root) {
-            chordAt(index, notes, n);
-            return;
-        }
-        index++;
-        note = noteAt(index);
+    String note = noteName(noteAt(root_index));
+    switch(_key.type) {
+    case Major:
+    case PentatonicMajor:
+        return note + (MAJOR_SCALE_CHORDS[root_index % 7]);
+    case Minor:
+    case PentatonicMinor:
+    case Blues:
+        return note + (MINOR_SCALE_CHORDS[root_index % 7]);
     }
-    return chordAt(0, notes, n);
 }
+
+// void Solfagus::chord(int8_t notes[], uint8_t n) const
+// {
+//     const int8_t root = notes[0] % 12;
+//     const int8_t octave = notes[0] / 12;
+
+//     int8_t index = 0;
+//     int8_t note = _key.tonic;
+//     while(note != _key.tonic || index == 0) {
+//         if(note % 12 == root) {
+//             chordAt(index, notes, octave, n);
+//             return;
+//         }
+//         index++;
+//         note = noteAt(index);
+//     }
+//     return chordAt(0, notes, n);
+// }
 
 void Solfagus::majorChord(int8_t notes[], uint8_t n) const
 {

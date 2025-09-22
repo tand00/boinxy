@@ -121,9 +121,9 @@ void Sequencer::feed(Event& e)
     updateActiveEvents(e);
     if(_record) {
         int step = getCurrentStep();
-        if(e.type == NoteOff && 5 * _elapsed > 4 * usStepLen()) {
+        if(e.type == NoteOff && 8 * _elapsed > 7 * usStepLen()) {
             step = (step + _track_len - 1) % _track_len;
-        } else if(e.type == NoteOn && 5 * _elapsed > 4 * usStepLen()) {
+        } else if(e.type == NoteOn && 8 * _elapsed > 7 * usStepLen()) {
             step = (step + 1) % _track_len;
         }
         addEvent(step, e);

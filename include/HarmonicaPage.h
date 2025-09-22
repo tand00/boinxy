@@ -12,10 +12,15 @@ class HarmonicaPage : public AppPage {
         void update(BoinxState* state) override;
 
         void display(BoinxState* state) override;
+
+        void chordOn(BoinxState* state, int8_t chord[], int8_t n);
+        void chordOff(BoinxState* state, int8_t chord[], int8_t n);
     
     private:
 
+        String _currentChord;
         int _octave = 4;
+        int _instrument = 0;
 
 };
 
