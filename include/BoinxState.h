@@ -24,6 +24,8 @@
 
 #define ENCODERS_MIN_STEPS 4
 
+#define MAX_TRACKS 16
+
 class Screen;
 class AppPage;
 
@@ -52,7 +54,8 @@ struct BoinxState {
     FrontPanel* panel;
     bool alter = false;
     bool change_signal = false;
-
+    
+    int tracks_instruments[MAX_TRACKS];
     Event active_events[MAX_ACTIVE_EVENTS];
 
     void execute(Event e);

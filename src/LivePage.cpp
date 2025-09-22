@@ -79,8 +79,8 @@ void LivePage::display(BoinxState *state)
     int offset = _settings_offset * 6;
     int bound = min(6, instru->getSettingsCount() - offset);
     for(int i = 0 ; i < bound ; i++) {
-        int16_t row = i / 2;
-        int16_t col = i % 2;
+        int16_t row = i % 3;
+        int16_t col = i / 3;
         display.setCursor(PAGE_START_X + col * 64, PAGE_START_Y + 12 + row * 12);
         display.print(instru->logSetting(i));
     }
