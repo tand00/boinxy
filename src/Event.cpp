@@ -43,3 +43,18 @@ Event Event::pulse() const
     res.type = Pulse;
     return res;
 }
+
+bool Event::isOn() const
+{
+    return type == NoteOn;
+}
+
+bool Event::isOff() const
+{
+    return type == NoteOff;
+}
+
+bool Event::isPulse() const
+{
+    return type == Pulse;
+}

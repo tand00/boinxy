@@ -25,6 +25,10 @@ struct Event {
     Event on() const;
     Event off() const;
     Event pulse() const;
+
+    bool isOn() const;
+    bool isOff() const;
+    bool isPulse() const;
 };
 
 #endif
