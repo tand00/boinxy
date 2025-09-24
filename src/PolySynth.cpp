@@ -1,6 +1,10 @@
-#include <SynthwavePoly.h>
+#include <PolySynth.h>
 
-SynthwavePoly::SynthwavePoly(String name)
+template class PolySynth<SynthwaveLead>;
+template class PolySynth<FMSynth>;
+
+template<class T>
+PolySynth<T>::PolySynth(String name)
     : _name(name)
 {
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
@@ -17,7 +21,8 @@ SynthwavePoly::SynthwavePoly(String name)
     _mixer2Out.connect(_mixer2, 0, _finalMixer, 1);
 }
 
-void SynthwavePoly::onEvent(Event ev)
+template<class T>
+void PolySynth<T>::onEvent(Event ev)
 {
     if(ev.type == Pulse || ev.isNone()) return;
     if(ev.type == NoteOn) {
@@ -36,27 +41,32 @@ void SynthwavePoly::onEvent(Event ev)
     }
 }
 
-const char *SynthwavePoly::getName() const
+template<class T>
+const char *PolySynth<T>::getName() const
 {
     return _name.c_str();
 }
 
-const String SynthwavePoly::getActionName(int i) const
+template<class T>
+const String PolySynth<T>::getActionName(int i) const
 {
     return _voices[0].getActionName(i);
 }
 
-int SynthwavePoly::getSettingsCount() const
+template<class T>
+int PolySynth<T>::getSettingsCount() const
 {
     return _voices[0].getSettingsCount();
 }
 
-const char *SynthwavePoly::getSettingName(int i) const
+template<class T>
+const char *PolySynth<T>::getSettingName(int i) const
 {
     return _voices[0].getSettingName(i);
 }
 
-void SynthwavePoly::configureSetting(int setting, int value)
+template<class T>
+void PolySynth<T>::configureSetting(int setting, int value)
 {
     AudioNoInterrupts();
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
@@ -65,17 +75,20 @@ void SynthwavePoly::configureSetting(int setting, int value)
     AudioInterrupts();
 }
 
-int SynthwavePoly::getSettingValue(int i) const
+template<class T>
+int PolySynth<T>::getSettingValue(int i) const
 {
     return _voices[0].getSettingValue(i);
 }
 
-String SynthwavePoly::logSetting(int i)
+template<class T>
+String PolySynth<T>::logSetting(int i)
 {
     return _voices[0].logSetting(i);
 }
 
-void SynthwavePoly::update()
+template<class T>
+void PolySynth<T>::update()
 {
     AudioNoInterrupts();
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
@@ -90,12 +103,14 @@ void SynthwavePoly::update()
     AudioInterrupts();
 }
 
-AudioStream &SynthwavePoly::getOutput()
+template<class T>
+AudioStream &PolySynth<T>::getOutput()
 {
     return _finalMixer;
 }
 
-int SynthwavePoly::voiceIndex(const int note) const
+template<class T>
+int PolySynth<T>::voiceIndex(const int note) const
 {
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
         if(_notes[i] == note) return i;
@@ -103,7 +118,8 @@ int SynthwavePoly::voiceIndex(const int note) const
     return -1;
 }
 
-int SynthwavePoly::findFreeIndex(const int note) const
+template<class T>
+int PolySynth<T>::findFreeIndex(const int note) const
 {
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
         if(_notes[i] == -1) return i;

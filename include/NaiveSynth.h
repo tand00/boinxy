@@ -7,7 +7,6 @@
 #include <SynthBlocks.h>
 
 #define N_NAIVE_VOICES 8
-#define N_NAIVE_VOICES_MIXERS (N_NAIVE_VOICES / 4) + ((N_NAIVE_VOICES % 4 == 0) ? 0 : 1)
 
 class NaiveSynth : public Instrument {
 

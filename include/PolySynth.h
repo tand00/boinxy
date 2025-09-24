@@ -1,18 +1,21 @@
-#ifndef SYNTHWAVE_POLY_H
-#define SYNTHWAVE_POLY_H
+#ifndef POLY_SYNTH_H
+#define POLY_SYNTH_H
 
 #include <Arduino.h>
 #include <Audio.h>
 #include <Instrument.h>
+
 #include <SynthwaveLead.h>
+#include <FMSynth.h>
 
 #define N_SYNTH_VOICES 8
 
-class SynthwavePoly : public Instrument {
+template<class T>
+class PolySynth : public Instrument {
 
     public:
 
-        SynthwavePoly(String name);
+        PolySynth(String name);
 
         void onEvent(Event) override;
         const char* getName() const override;
@@ -41,7 +44,7 @@ class SynthwavePoly : public Instrument {
         AudioMixer4 _mixer1;
         AudioMixer4 _mixer2;
         AudioMixer4 _finalMixer;
-        SynthwaveLead _voices[N_SYNTH_VOICES];
+        T _voices[N_SYNTH_VOICES];
 
         AudioConnection _voicesOut[N_SYNTH_VOICES];
         AudioConnection _mixer1Out;
@@ -50,5 +53,8 @@ class SynthwavePoly : public Instrument {
         int _active_voices = 0;
 
 };
+
+extern template class PolySynth<SynthwaveLead>;
+extern template class PolySynth<FMSynth>;
 
 #endif

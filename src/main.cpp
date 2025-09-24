@@ -31,7 +31,7 @@
 #include <SamplePlayer.h>
 #include <NaiveSynth.h>
 #include <DrumSynth.h>
-#include <SynthwavePoly.h>
+#include <PolySynth.h>
 
 // Pages
 #include <LivePage.h>
@@ -76,8 +76,8 @@ Solfagus solfagus;
 
 // Instruments
 NaiveSynth naiveSynth;
-SynthwavePoly synthPoly1("SynthPoly1");
-SynthwavePoly synthPoly2("SynthPoly2");
+PolySynth<SynthwaveLead> synthPoly1("SynthPoly1");
+PolySynth<SynthwaveLead> synthPoly2("SynthPoly2");
 DrumSynth drumSynth;
 SamplePlayer player;
 
