@@ -50,12 +50,10 @@ void LivePage::update(BoinxState *state)
             encoder->write(0);
             instru->incrSetting(offset + i);
             markForUpdate();
-            //state->screen->message(instru->logSetting(offset + i));
         } else if(e_value < 0) {
             encoder->write(0);
             instru->decrSetting(offset + i);
             markForUpdate();
-            //state->screen->message(instru->logSetting(offset + i));
         }
     }
     if(state->panel->button2.fallingEdge()) {
