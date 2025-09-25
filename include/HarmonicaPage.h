@@ -19,8 +19,8 @@ class HarmonicaPage : public AppPage {
     private:
 
         String _currentChord;
-        int _octave = 4;
-        int _instrument = 0;
+        int8_t _octave = 4;
+        int8_t _instrument = 0;
 
 };
 

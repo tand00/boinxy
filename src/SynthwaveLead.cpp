@@ -40,12 +40,12 @@ const char *SynthwaveLead::getName() const
     return "SynthwaveLead";
 }
 
-const String SynthwaveLead::getActionName(int i) const
+const String SynthwaveLead::getActionName(int16_t i) const
 {
     return Solfagus::noteName(i);
 }
 
-String SynthwaveLead::logSetting(int i)
+String SynthwaveLead::logSetting(uint8_t i)
 {
     String str = String(getSettingName(i)) + ":";
     switch(i) {
@@ -83,12 +83,12 @@ void SynthwaveLead::setNote(int8_t note)
     AudioInterrupts();
 }
 
-int SynthwaveLead::getSettingsCount() const
+uint8_t SynthwaveLead::getSettingsCount() const
 {
     return 7;
 }
 
-const char *SynthwaveLead::getSettingName(int i) const
+const char *SynthwaveLead::getSettingName(uint8_t i) const
 {
     switch(i) {
     case 0:
@@ -109,7 +109,7 @@ const char *SynthwaveLead::getSettingName(int i) const
     return "unknown";
 }
 
-void SynthwaveLead::configureSetting(int setting, int value)
+void SynthwaveLead::configureSetting(uint8_t setting, int value)
 {
     if(setting == 0) {
         _volume = min(max(0, value), 40);
@@ -143,7 +143,7 @@ void SynthwaveLead::configureSetting(int setting, int value)
     } 
 }
 
-int SynthwaveLead::getSettingValue(int i) const
+int SynthwaveLead::getSettingValue(uint8_t i) const
 {
     switch(i) {
     case 0:

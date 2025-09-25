@@ -3,12 +3,12 @@
 Sequencer::Sequencer()
 { }
 
-int Sequencer::getTempo() const
+uint16_t Sequencer::getTempo() const
 {
     return _tempo;
 }
 
-void Sequencer::setTempo(int tempo)
+void Sequencer::setTempo(uint16_t tempo)
 {
     _tempo = min(max(1, tempo), 300);
 }
@@ -23,43 +23,43 @@ void Sequencer::decrTempo()
     setTempo(_tempo - 1);
 }
 
-int Sequencer::getTrackLen() const
+int16_t Sequencer::getTrackLen() const
 {
     return _track_len;
 }
 
-int Sequencer::getCurrentStep() const
+int16_t Sequencer::getCurrentStep() const
 {
     return _current_step;
 }
 
-void Sequencer::setTrackLen(int len)
+void Sequencer::setTrackLen(int16_t len)
 {
     _track_len = min(max(1, len), MAX_SEQUENCER_STEPS);
 }
 
-int Sequencer::getStepsPerPulse() const
+uint8_t Sequencer::getStepsPerPulse() const
 {
     return _steps_per_pulse;
 }
 
-void Sequencer::setStepsPerPulse(int spp)
+void Sequencer::setStepsPerPulse(uint8_t spp)
 {
     _steps_per_pulse = spp;
 }
 
-void Sequencer::setCurrentStep(int step, bool reset_time)
+void Sequencer::setCurrentStep(int16_t step, bool reset_time)
 {
     _current_step = step;
     if(reset_time) _elapsed = 0;
 }
 
-int Sequencer::getCurrentPulse() const
+int16_t Sequencer::getCurrentPulse() const
 {
     return (getCurrentStep() / getStepsPerPulse());
 }
 
-int Sequencer::getPreviousStep() const
+int16_t Sequencer::getPreviousStep() const
 {
     return (_current_step + _track_len - 1) % _track_len;
 }
@@ -185,7 +185,7 @@ unsigned long Sequencer::usPulseLen() const
     return pulse_duration;
 }
 
-int Sequencer::eventIndex(int step, const Event &e) const
+int16_t Sequencer::eventIndex(int16_t step, const Event &e) const
 {
     for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
         if(_events[step][i] == e) {
@@ -200,7 +200,7 @@ void Sequencer::addEvent(Event e)
     addEvent(getCurrentStep(), e);
 }
 
-void Sequencer::addEvent(int step, Event e)
+void Sequencer::addEvent(int16_t step, Event e)
 {
     if(eventIndex(step, e) >= 0) return;
     int index = findFreeEventIndex(step);
@@ -208,14 +208,14 @@ void Sequencer::addEvent(int step, Event e)
     _events[step][index] = e;
 }
 
-void Sequencer::removeEvent(int step, const Event &e)
+void Sequencer::removeEvent(int16_t step, const Event &e)
 {
     int to_remove = eventIndex(step, e);
     if(to_remove == -1) return;
     _events[step][to_remove].nonify();
 }
 
-void Sequencer::toggleEvent(int step, Event e)
+void Sequencer::toggleEvent(int16_t step, Event e)
 {
     int to_remove = eventIndex(step, e);
     if(to_remove >= 0) {
@@ -227,23 +227,23 @@ void Sequencer::toggleEvent(int step, Event e)
     }
 }
 
-void Sequencer::purgeInstrument(int instrument)
+void Sequencer::purgeInstrument(int16_t instrument)
 {
-    for(int step = 0 ; step < _track_len ; step++) {
+    for(int16_t step = 0 ; step < _track_len ; step++) {
         purgeInstrumentStep(step, instrument);
     }
 }
 
-void Sequencer::purgeInstrumentStep(int step, int instrument)
+void Sequencer::purgeInstrumentStep(int16_t step, int16_t instrument)
 {
-    for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
+    for(int16_t i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
         if(_events[step][i].instrument == instrument) {
             _events[step][i].nonify();
         }
     }
 }
 
-Event *Sequencer::getEvents(int step)
+Event *Sequencer::getEvents(int16_t step)
 {
     return _events[step];
 }
@@ -263,7 +263,7 @@ Event *Sequencer::getActiveEvents()
     return _active_events;
 }
 
-int Sequencer::findFreeEventIndex(int step)
+int16_t Sequencer::findFreeEventIndex(int16_t step)
 {
     for(int i = 0 ; i < MAX_EVENTS_PER_STEP ; i++) {
         if(_events[step][i].isNone()) return i;

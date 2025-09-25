@@ -16,18 +16,18 @@ class NaiveSynth : public Instrument {
 
         void onEvent(Event ev) override;
         const char* getName() const override; 
-        const String getActionName(int i) const override;
+        const String getActionName(int16_t i) const override;
 
         AudioStream& getOutput() override;
 
-        int getSettingsCount() const override;
-        const char* getSettingName(int i) const override;
-        void configureSetting(int setting, int value) override;
-        int getSettingValue(int i) const override;
+        uint8_t getSettingsCount() const override;
+        const char* getSettingName(uint8_t i) const override;
+        void configureSetting(uint8_t setting, int value) override;
+        int getSettingValue(uint8_t i) const override;
 
         void update() override;
 
-        String logSetting(int i) override;
+        String logSetting(uint8_t i) override;
 
     private:
 
@@ -50,9 +50,9 @@ class NaiveSynth : public Instrument {
         AudioConnection _finalMixerOut;
         AudioConnection _ampOut;
 
-        int _voices[N_NAIVE_VOICES];
+        int16_t _voices[N_NAIVE_VOICES];
 
-        int _active_voices = 0;
+        uint8_t _active_voices = 0;
 
         short _shape = 0;
         int _volume = 20;

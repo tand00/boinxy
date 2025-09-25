@@ -52,7 +52,7 @@ const char* NaiveSynth::getName() const
     return "NaiveSynth";
 }
 
-const String NaiveSynth::getActionName(int i) const
+const String NaiveSynth::getActionName(int16_t i) const
 {
     return Solfagus::noteName(i);
 }
@@ -62,12 +62,12 @@ AudioStream& NaiveSynth::getOutput()
     return _filter;
 }
 
-int NaiveSynth::getSettingsCount() const
+uint8_t NaiveSynth::getSettingsCount() const
 {
     return 4;
 }
 
-const char *NaiveSynth::getSettingName(int i) const
+const char *NaiveSynth::getSettingName(uint8_t i) const
 {
     switch(i) {
     case 0:
@@ -83,7 +83,7 @@ const char *NaiveSynth::getSettingName(int i) const
     }
 }
 
-void NaiveSynth::configureSetting(int setting, int value)
+void NaiveSynth::configureSetting(uint8_t setting, int value)
 {
     if(setting == 0) {
         _shape = min(max(0, value), 3);
@@ -108,7 +108,7 @@ void NaiveSynth::configureSetting(int setting, int value)
     }
 }
 
-int NaiveSynth::getSettingValue(int i) const
+int NaiveSynth::getSettingValue(uint8_t i) const
 {
     switch(i){
     case 0:
@@ -143,7 +143,7 @@ void NaiveSynth::update()
     }
 }
 
-String NaiveSynth::logSetting(int i)
+String NaiveSynth::logSetting(uint8_t i)
 {
     String str = String(getSettingName(i)) + ":";
     switch(i) {

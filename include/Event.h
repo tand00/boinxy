@@ -5,6 +5,8 @@
 
 #define ACTION_NONE -1
 
+typedef int16_t action_index;
+
 enum EventType {
     Pulse,
     NoteOn,
@@ -13,7 +15,7 @@ enum EventType {
 
 struct Event {
     EventType type = Pulse;
-    int action = ACTION_NONE;
+    int16_t action = ACTION_NONE;
     uint8_t instrument = 0;
 
     bool operator==(const Event& other) const;

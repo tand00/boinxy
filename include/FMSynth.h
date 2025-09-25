@@ -13,14 +13,14 @@ class FMSynth : public Instrument {
 
         void onEvent(Event) override;
         const char* getName() const override;
-        const String getActionName(int i) const override;
+        const String getActionName(int16_t i) const override;
 
-        int getSettingsCount() const override;
-        const char* getSettingName(int i) const override;
-        void configureSetting(int setting, int value) override;
-        int getSettingValue(int i) const override;
+        uint8_t getSettingsCount() const override;
+        const char* getSettingName(uint8_t i) const override;
+        void configureSetting(uint8_t setting, int value) override;
+        int getSettingValue(uint8_t i) const override;
 
-        String logSetting(int i) override;
+        String logSetting(uint8_t i) override;
 
         void update() override;
 

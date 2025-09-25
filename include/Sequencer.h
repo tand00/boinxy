@@ -25,23 +25,23 @@ class Sequencer {
 
         Sequencer();
     
-        int getTempo() const;
-        void setTempo(int tempo);
+        uint16_t getTempo() const;
+        void setTempo(uint16_t tempo);
         void incrTempo();
         void decrTempo();
 
-        int getTrackLen() const;
-        void setTrackLen(int len);
+        int16_t getTrackLen() const;
+        void setTrackLen(int16_t len);
 
-        int getStepsPerPulse() const;
-        void setStepsPerPulse(int spp);
+        uint8_t getStepsPerPulse() const;
+        void setStepsPerPulse(uint8_t spp);
 
-        int getCurrentStep() const;
-        void setCurrentStep(int step, bool reset_time = true);
+        int16_t getCurrentStep() const;
+        void setCurrentStep(int16_t step, bool reset_time = true);
 
-        int getCurrentPulse() const;
+        int16_t getCurrentPulse() const;
 
-        int getPreviousStep() const;
+        int16_t getPreviousStep() const;
         
         void update();
         void reset();
@@ -62,16 +62,16 @@ class Sequencer {
         unsigned long usStepLen() const;
         unsigned long usPulseLen() const;
 
-        int eventIndex(int step, const Event& e) const;
+        int16_t eventIndex(int16_t step, const Event& e) const;
         void addEvent(Event e);
-        void addEvent(int step, Event e);
-        void removeEvent(int step, const Event& e);
-        void toggleEvent(int step, Event e);
-        void purgeInstrumentStep(int step, int instrument);
-        void purgeInstrument(int instrument);
+        void addEvent(int16_t step, Event e);
+        void removeEvent(int16_t step, const Event& e);
+        void toggleEvent(int16_t step, Event e);
+        void purgeInstrumentStep(int16_t step, int16_t instrument);
+        void purgeInstrument(int16_t instrument);
         //uint8_t getEventsCount(int step) const;
         //uint8_t getEventsCount() const;
-        Event* getEvents(int step);
+        Event* getEvents(int16_t step);
         Event* getEvents();
         Event* getPreviousEvents();
 
@@ -85,7 +85,7 @@ class Sequencer {
 
     private:
 
-        int findFreeEventIndex(int step);
+        int16_t findFreeEventIndex(int16_t step);
 
         bool updateActiveEvents(Event e);
 
@@ -93,13 +93,13 @@ class Sequencer {
 
         bool _recorded_events = false;
 
-        int _tempo = DEFAULT_TEMPO;
-        int _track_len = DEFAULT_TRACK_LEN;
-        int _current_step = 0;
+        uint16_t _tempo = DEFAULT_TEMPO;
+        int16_t _track_len = DEFAULT_TRACK_LEN;
+        int16_t _current_step = 0;
         elapsedMicros _elapsed = 0;
         int _date_backup = 0;
 
-        int _steps_per_pulse = DEFAULT_STEP_PER_PULSE;
+        uint8_t _steps_per_pulse = DEFAULT_STEP_PER_PULSE;
 
         bool _record = false;
 

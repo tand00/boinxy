@@ -48,25 +48,25 @@ const char *PolySynth<T>::getName() const
 }
 
 template<class T>
-const String PolySynth<T>::getActionName(int i) const
+const String PolySynth<T>::getActionName(int16_t i) const
 {
     return _voices[0].getActionName(i);
 }
 
 template<class T>
-int PolySynth<T>::getSettingsCount() const
+uint8_t PolySynth<T>::getSettingsCount() const
 {
     return _voices[0].getSettingsCount();
 }
 
 template<class T>
-const char *PolySynth<T>::getSettingName(int i) const
+const char *PolySynth<T>::getSettingName(uint8_t i) const
 {
     return _voices[0].getSettingName(i);
 }
 
 template<class T>
-void PolySynth<T>::configureSetting(int setting, int value)
+void PolySynth<T>::configureSetting(uint8_t setting, int value)
 {
     AudioNoInterrupts();
     for(int i = 0 ; i < N_SYNTH_VOICES ; i++) {
@@ -76,13 +76,13 @@ void PolySynth<T>::configureSetting(int setting, int value)
 }
 
 template<class T>
-int PolySynth<T>::getSettingValue(int i) const
+int PolySynth<T>::getSettingValue(uint8_t i) const
 {
     return _voices[0].getSettingValue(i);
 }
 
 template<class T>
-String PolySynth<T>::logSetting(int i)
+String PolySynth<T>::logSetting(uint8_t i)
 {
     return _voices[0].logSetting(i);
 }

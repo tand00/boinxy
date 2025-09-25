@@ -84,19 +84,19 @@ void LivePage::display(BoinxState *state)
     }
 }
 
-int LivePage::noteIndex(const int i) const
+int16_t LivePage::noteIndex(const int16_t i) const
 {
     return _octave * 12 + FIRST_KEYBOARD_NOTE + i;
 }
 
-void LivePage::noteOn(const int i, BoinxState* state) const
+void LivePage::noteOn(const int16_t i, BoinxState* state) const
 {
     Event e { NoteOn, i, _instrument };
     state->execute(e);
     state->sequencer->feed(e);
 }
 
-void LivePage::noteOff(const int i, BoinxState* state) const
+void LivePage::noteOff(const int16_t i, BoinxState* state) const
 {
     Event e { NoteOff, i, _instrument };
     state->execute(e);

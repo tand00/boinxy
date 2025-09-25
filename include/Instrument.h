@@ -10,20 +10,20 @@ class Instrument {
 
         virtual void onEvent(Event) = 0;
         virtual const char* getName() const = 0;
-        virtual const String getActionName(int i) const = 0;
+        virtual const String getActionName(int16_t i) const = 0;
 
-        virtual int getSettingsCount() const;
-        virtual const char* getSettingName(int i) const { return "unknown"; }
-        virtual void configureSetting(int setting, int value) {}
-        virtual int getSettingValue(int i) const { return 0; }
+        virtual uint8_t getSettingsCount() const;
+        virtual const char* getSettingName(uint8_t i) const { return "unknown"; }
+        virtual void configureSetting(uint8_t setting, int value) {}
+        virtual int getSettingValue(uint8_t i) const { return 0; }
 
         virtual void analogInputX(float value) {}
         virtual void analogInputY(float value) {}
 
-        void incrSetting(int i);
-        void decrSetting(int i);
+        void incrSetting(uint8_t i);
+        void decrSetting(uint8_t i);
 
-        virtual String logSetting(int i);
+        virtual String logSetting(uint8_t i);
 
         virtual void update() {}
 

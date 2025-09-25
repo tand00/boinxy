@@ -15,15 +15,15 @@ class LivePage : public AppPage {
 
         void display(BoinxState* state) override;
 
-        int noteIndex(const int i) const;
+        int16_t noteIndex(const int16_t i) const;
 
-        void noteOn(const int i, BoinxState* state) const;
-        void noteOff(const int i, BoinxState* state) const;
+        void noteOn(const int16_t i, BoinxState* state) const;
+        void noteOff(const int16_t i, BoinxState* state) const;
 
     private:
 
         uint8_t _instrument = 0;
-        int _octave = DEFAULT_LIVE_PAGE_OCTAVE;
+        int8_t _octave = DEFAULT_LIVE_PAGE_OCTAVE;
         uint8_t _settings_offset = 0;
         
 };

@@ -55,7 +55,7 @@ struct BoinxState {
     bool alter = false;
     bool change_signal = false;
     
-    int tracks_instruments[MAX_TRACKS];
+    int16_t tracks_instruments[MAX_TRACKS];
     Event active_events[MAX_ACTIVE_EVENTS];
 
     void execute(Event e);

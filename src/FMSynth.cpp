@@ -33,31 +33,31 @@ const char *FMSynth::getName() const
     return "FMSynth";
 }
 
-const String FMSynth::getActionName(int i) const
+const String FMSynth::getActionName(int16_t i) const
 {
     return Solfagus::noteName(i);
 }
 
-int FMSynth::getSettingsCount() const
+uint8_t FMSynth::getSettingsCount() const
 {
     return 0;
 }
 
-const char *FMSynth::getSettingName(int i) const
+const char *FMSynth::getSettingName(uint8_t i) const
 {
     return "unkown";
 }
 
-void FMSynth::configureSetting(int setting, int value)
+void FMSynth::configureSetting(uint8_t setting, int value)
 {
 }
 
-int FMSynth::getSettingValue(int i) const
+int FMSynth::getSettingValue(uint8_t i) const
 {
     return 0;
 }
 
-String FMSynth::logSetting(int i)
+String FMSynth::logSetting(uint8_t i)
 {
     return String();
 }

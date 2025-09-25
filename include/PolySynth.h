@@ -19,14 +19,14 @@ class PolySynth : public Instrument {
 
         void onEvent(Event) override;
         const char* getName() const override;
-        const String getActionName(int i) const override;
+        const String getActionName(int16_t i) const override;
 
-        int getSettingsCount() const override;
-        const char* getSettingName(int i) const override;
-        void configureSetting(int setting, int value) override;
-        int getSettingValue(int i) const override;
+        uint8_t getSettingsCount() const override;
+        const char* getSettingName(uint8_t i) const override;
+        void configureSetting(uint8_t setting, int value) override;
+        int getSettingValue(uint8_t i) const override;
 
-        String logSetting(int i) override;
+        String logSetting(uint8_t i) override;
 
         void update() override;
 
@@ -39,7 +39,7 @@ class PolySynth : public Instrument {
         int voiceIndex(const int note) const;
         int findFreeIndex(const int note) const;
 
-        int _notes[N_SYNTH_VOICES];
+        int16_t _notes[N_SYNTH_VOICES];
 
         AudioMixer4 _mixer1;
         AudioMixer4 _mixer2;
@@ -50,7 +50,7 @@ class PolySynth : public Instrument {
         AudioConnection _mixer1Out;
         AudioConnection _mixer2Out;
 
-        int _active_voices = 0;
+        uint8_t _active_voices = 0;
 
 };
 

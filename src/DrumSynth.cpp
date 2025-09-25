@@ -20,17 +20,17 @@ const char* DrumSynth::getName() const
     return "DrumSynth";
 }
 
-const String DrumSynth::getActionName(int i) const
+const String DrumSynth::getActionName(int16_t i) const
 {
     return Solfagus::noteName(i);
 }
 
-int DrumSynth::getSettingsCount() const
+uint8_t DrumSynth::getSettingsCount() const
 {
     return 3;
 }
 
-const char *DrumSynth::getSettingName(int i) const
+const char *DrumSynth::getSettingName(uint8_t i) const
 {
     switch(i) {
         case 0:
@@ -44,7 +44,7 @@ const char *DrumSynth::getSettingName(int i) const
     }
 }
 
-void DrumSynth::configureSetting(int setting, int value)
+void DrumSynth::configureSetting(uint8_t setting, int value)
 {
     switch(setting) {
         case 0:
@@ -59,7 +59,7 @@ void DrumSynth::configureSetting(int setting, int value)
     }
 }
 
-int DrumSynth::getSettingValue(int i) const
+int DrumSynth::getSettingValue(uint8_t i) const
 {
     return 0;
 }

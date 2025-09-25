@@ -44,7 +44,7 @@ const char* SamplePlayer::getName() const
     return "Sampler";
 }
 
-const String SamplePlayer::getActionName(int i) const
+const String SamplePlayer::getActionName(int16_t i) const
 {
     return _samples[i % _n_samples];
 }
